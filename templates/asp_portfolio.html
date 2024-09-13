@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+	document.title = "ASP - Portfolios";
+</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
+
+<style>
+	.ag-theme-alpine,
+	.ag-theme-alpine-dark {
+		/* Disable all borders initially */
+		--ag-borders-style: none;
+
+		--ag-row-border-style: solid;
+		--ag-row-border-width: 0.5px;
+		--ag-row-border-color: rgb(255, 255, 255);
+
+		--ag-cell-horizontal-border: solid rgb(0, 0, 0);
+
+		/* Cell border styling */
+		.ag-cell {
+			border: 1px solid rgb(255, 255, 255);
+			/* Black border around the cell */
+		}
+	}
+
+	.custom-loading-overlay {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 16px;
+		color: #000;
+		background-color: #000000;
+	}
+</style>
+
+<!-- Content -->
+<section>
+	<header class="main">
+		<h1>The ASP Portfolio</h1>
+	</header>
+
+	<!-- FlexGrid container -->
+	<div id="aspGrid" class="ag-theme-alpine-dark" style="height: 200px; width: 100%;"></div>
+
+	<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+
+
+	<script>
+		let gridApiASP;
+		let gridColumnApiASP;
+
+		let gridApiQTI;
+		let gridColumnApiQTI;
+
+		function processRowDataASP(data, rsl) {
+			return data.map(item => {
+				const gainLossValue = parseFloat(item['Unrealized Gain/Loss'].replace('%', ''));
+				const isPositive = gainLossValue > 0;
+				const textColor = isPositive ? '#b3ffb3' : '#ffb3b3';
+				const backgroundColor = isPositive ? '#006600' : '#660000';
+
+				item['Company Name'] = { value: item['Company Name'], textColor, backgroundColor };
+				item['Ticker'] = { value: item['Ticker'], textColor, backgroundColor };
+
+				return item;
+			});
+		}
+
+
+		function processRowDataQTI(data) {
+			return data.map(item => {
+				const gainLossValue = parseFloat(item['Unrealized Gain/Loss'].replace('%', ''));
+				const isPositive = gainLossValue > 0;
+				const textColor = isPositive ? '#b3ffb3' : '#ffb3b3';
+				const backgroundColor = isPositive ? '#006600' : '#660000';
+
+				item['Company Name'] = { value: item['Company Name'], textColor, backgroundColor };
+				item['Ticker'] = { value: item['Ticker'], textColor, backgroundColor };
+
+				return item;
+			});
+		}
+
+		function nameTickerCellRenderer(params) {
+			const { textColor, backgroundColor } = params.value;
+			return `<span style="color: ${textColor}; background-color: ${backgroundColor}; width: 100%; height: 100%">${params.value.value}</span>`;
+		}
+
+		function conditionalCellStyle(params) {
+			const field = params.colDef.field;
+
+			// Check if "Stop Loss" should be highlighted based on "Raised Stop Loss"
+			if (field === 'Stop Loss' && parseFloat(params.data['Raised Stop Loss']) > 0) {
+				return {
+					backgroundColor: '#ffcc00' // Dark yellow color
+				};
+			}
+
+			if (['Company Name', 'Ticker', 'Current Price', 'Unrealized Gain/Loss'].includes(field)) {
+				const gainLossValue = parseFloat(params.data['Unrealized Gain/Loss'].replace('%', ''));
+				const isPositive = gainLossValue > 0;
+				const textColor = isPositive ? '#b3ffb3' : '#ffb3b3';
+				const backgroundColor = isPositive ? '#006600' : '#660000';
+
+				return {
+					color: textColor,
+					backgroundColor: backgroundColor
+				};
+			}
+			return {};
+		}
+
+		function typeColor(params) {
+			const field = params.colDef.field;
+
+
+			// Check if the field is 'Type'
+			if (field === 'Type') {
+				const typeValue = params.data['Type'];
+
+				// Customize the style based on 'Type'
+				if (typeValue === 'Buy') {
+					return {
+						color: '#b3ffb3',
+						backgroundColor: '#006600'
+					};
+				} else if (typeValue === 'Short') {
+					return {
+						color: '#ffb3b3',
+						backgroundColor: '#660000'
+					};
+				}
+			}
+
+			// Default style for other fields
+			return {};
+		}
+
+		const columnDefsASP = [
+			{ headerName: "Company Name", field: "Company Name", cellStyle: conditionalCellStyle, cellRenderer: nameTickerCellRenderer, flex: 1, minWidth: 175 },
+			{ headerName: "Ticker", field: "Ticker", cellStyle: conditionalCellStyle, cellRenderer: nameTickerCellRenderer, flex: 1, minWidth: 85 },
+			{ headerName: "Initial Price", field: "Price Bought", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Current Price", field: "Current Price", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Stop Loss", field: "Stop Loss", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Target 1", field: "Target 1", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Target 2", field: "Target 2", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Unrealized Gain/Loss", field: "Unrealized Gain/Loss", cellStyle: conditionalCellStyle, flex: 1, minWidth: 165 },
+			{ headerName: "% To T1", field: "% To T1", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "% To T2", field: "% To T2", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "% To Stop Loss", field: "% To Stop Loss", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Day Bought", field: "Day Bought", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 }
+		];
+
+		const columnDefsQTI = [
+			{ headerName: "Type", field: "Type", cellStyle: typeColor, flex: 1, minWidth: 85 },
+			{ headerName: "Company Name", field: "Company Name", cellStyle: conditionalCellStyle, cellRenderer: nameTickerCellRenderer, flex: 1, minWidth: 200 },
+			{ headerName: "Ticker", field: "Ticker", cellStyle: conditionalCellStyle, cellRenderer: nameTickerCellRenderer, flex: 1, minWidth: 85 },
+			{ headerName: "Initial Price", field: "Price Bought", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Current Price", field: "Current Price", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Stop Loss", field: "Stop Loss", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 },
+			{ headerName: "Unrealized Gain/Loss", field: "Unrealized Gain/Loss", cellStyle: conditionalCellStyle, flex: 1, minWidth: 165 },
+			{ headerName: "Day Bought", field: "Day Bought", cellStyle: conditionalCellStyle, flex: 1, minWidth: 95 }
+		];
+
+		// Grid options for ASP
+		const gridOptionsASP = {
+			columnDefs: columnDefsASP,
+			rowData: [],
+			loadingOverlayComponentParams: { template: '<span class="custom-loading-overlay">Loading...</span>' },
+			noRowsOverlayComponentParams: { template: '<span class="custom-loading-overlay">No data available</span>' },
+			onGridReady: function (params) {
+				gridApiASP = params.api;
+				gridColumnApiASP = params.columnApi;
+				gridApiASP.showLoadingOverlay();
+				fetchDataASP();
+				setInterval(fetchDataASP, 60000); // Update every 1 minute
+			}
+		};
+
+		// Grid options for QTI
+		const gridOptionsQTI = {
+			columnDefs: columnDefsQTI,
+			rowData: [],
+			loadingOverlayComponentParams: { template: '<span class="custom-loading-overlay">Loading...</span>' },
+			noRowsOverlayComponentParams: { template: '<span class="custom-loading-overlay">No data available</span>' },
+			onGridReady: function (params) {
+				gridApiQTI = params.api;
+				gridColumnApiQTI = params.columnApi;
+				gridApiQTI.showLoadingOverlay();
+				fetchDataQTI();
+				setInterval(fetchDataQTI, 60000); // Update every 1 minute
+			}
+		};
+
+		// Function to fetch data for ASP grid
+		function fetchDataASP() {
+			fetch('/asp-data')
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					const processedData = processRowDataASP(data);
+					gridApiASP.setGridOption("rowData", processedData);
+					gridApiASP.hideOverlay();
+				})
+				.catch(error => {
+					console.error('Fetch error:', error);
+					gridApiASP.showNoRowsOverlay();
+				});
+		}
+
+		// Function to fetch data for QTI grid
+		function fetchDataQTI() {
+			fetch('/qti-data')
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					const processedData = processRowDataQTI(data);
+					gridApiQTI.setGridOption("rowData", processedData);
+					gridApiQTI.hideOverlay();
+				})
+				.catch(error => {
+					console.error('Fetch error:', error);
+					gridApiQTI.showNoRowsOverlay();
+				});
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+			const gridDivASP = document.querySelector('#aspGrid');
+			new agGrid.Grid(gridDivASP, gridOptionsASP);
+
+			const gridDivQTI = document.querySelector('#qtiGrid');
+			new agGrid.Grid(gridDivQTI, gridOptionsQTI);
+		});
+	</script>
+
+	<header class="main">
+		<h1>The QTI Portfolio</h1>
+	</header>
+
+	<div id="qtiGrid" class="ag-theme-alpine-dark" style="height: 200px; width: 100%;"></div>
+
+
+
+
+</section>
+
+{% endblock %}

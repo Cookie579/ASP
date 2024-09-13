@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script>
+    document.title = "ASP - Portfolio Updates";
+</script>
+
+<style>
+    .recent-changes-section {
+        background-color: #000000;
+        border-radius: 10px;
+        border: 1px solid #ddd !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        padding-top: 13.3333px !important;
+        margin-bottom: 0;
+        margin-top: 20px !important;
+    }
+
+    .recent-changes-header {
+        text-align: center;
+        padding: -20px 0 10px;
+    }
+
+    .change-item {
+        padding: 10px;
+        border: 1px solid #ddd;
+        background-color: #000000;
+        border-radius: 5px;
+        line-height: 1.5;
+    }
+
+    .change-item .date {
+        font-weight: bold;
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+
+    .change-item ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .change-item ul li {
+        color: #9e9d9d;
+        line-height: 1.5;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .change-item ul li:not(:last-child) {
+        border-bottom: 1px solid #333;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<!-- Content -->
+<section class="recent-changes-section">
+    <header class="recent-changes-header">
+        <h1>All Portfolio Updates</h1>
+    </header>
+
+    <section>
+        {% if g.recent_changes %}
+        {% for change in g.recent_changes %}
+        <div class="change-item">
+            <div class="date">{{ change.date }}</div>
+            <ul>
+                {% for detail in change.changes %}
+                <li>{{ detail }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No recent changes available.</p>
+        {% endif %}
+    </section>
+</section>
+
+{% endblock %}

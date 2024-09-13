@@ -1,0 +1,347 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+
+    {% include 'components/google_analytics.html'%}
+
+    <title>Axiom Stock Picks - Register</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="static/css/main.css" />
+    <link rel="shortcut icon" href="#">
+
+    <style>
+        /* Update Header Styling */
+        #header {
+            padding: 2.1em 0 1em 0 !important;
+        }
+
+        /* Split screen styling */
+        .split-screen {
+            display: flex;
+            margin-top: 40px;
+            /* Space between the top bar and form */
+            max-width: 1000px;
+            margin: 40px auto;
+            /* Centering the form */
+            border-radius: 10px;
+            /* Rounded corners */
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            /* Darker shadow */
+        }
+
+        .left {
+            flex: 1;
+            background-color: #000000;
+            /* Pure black */
+            color: #ffffff;
+            /* White text */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Center vertically */
+            align-items: center;
+            /* Center horizontally */
+            text-align: center;
+            /* Center text alignment */
+            padding: 20px;
+            min-height: 400px;
+            /* Ensure there's enough height for vertical centering */
+        }
+
+        .left h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #0501fc;
+            /* Dark blue */
+        }
+
+        .left p {
+            font-size: 1.5em;
+            color: #d1e7ff;
+            /* Light blue text */
+        }
+
+        .right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background-color: #ffffff;
+            /* White background */
+        }
+
+        .registration-form {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            background: #f4f4f4;
+            /* Light gray background */
+            border-radius: 10px;
+            /* Rounded corners */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            /* Soft shadow */
+            display: flex;
+            flex-direction: column;
+            /* Align items in a column */
+            justify-content: space-between;
+            /* Space between items */
+            height: 100%;
+            /* Make sure the form takes full height */
+        }
+
+        .registration-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .registration-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+            /* Dark text */
+        }
+
+        .registration-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            /* Rounded corners */
+            font-size: 14px;
+            background: #ffffff;
+            /* White input background */
+            color: #333;
+            /* Dark text */
+        }
+
+        .registration-form input::placeholder {
+            color: #888;
+        }
+
+        .registration-form button {
+            width: 100%;
+            background: #000000;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            box-shadow: none;
+            color: white !important;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-bottom: 0px !important;
+            margin-top: 15px;
+        }
+
+        .registration-form button:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .registration-form button:hover {
+            background: #0501fc;
+        }
+
+        .registration-form .form-link {
+            text-align: center;
+        }
+
+        .registration-form .form-link a {
+            color: #000000 !important;
+            text-decoration: none !important;
+            transition: color 0.3s ease;
+            border-bottom: dotted 1px !important;
+        }
+
+        .registration-form .form-link a:hover {
+            color: #0501fc !important;
+        }
+
+        .flash-container {
+            padding: 35px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .flash.success {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .flash,
+        .flash.error {
+            background-color: #f44336;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        /* Overlay Styles */
+        #confirmation-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid black;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            width: 400px;
+        }
+
+        #confirmation-overlay label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #confirmation-overlay input {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        #confirmation-overlay button {
+            width: 100%;
+            background: #000000;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            box-shadow: none;
+            color: white !important;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-bottom: 0px !important;
+            margin-top: 15px;
+
+        }
+
+        #confirmation-overlay button:hover {
+            color: #0501fc !important;
+        }
+
+        #overlay-close {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #ff0000;
+        }
+    </style>
+</head>
+
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+
+                <!-- Header -->
+                <header id="header">
+                    <a href="/" class="logo"><strong>Axiom</strong> Stock Picks</a>
+                </header>
+
+                <!-- Split Screen Content -->
+                <div class="split-screen">
+
+                    <!-- Left Side -->
+                    <div class="left">
+                        <h1>Welcome to ASP.</h1>
+                        <p>Are you ready to join the elite?</p>
+                    </div>
+
+                    <!-- Right Side -->
+                    <div class="right">
+                        <div class="registration-form">
+                            <form action="/register" method="post">
+                                <div class="form-group">
+                                    <label for="first_name">First Name</label>
+                                    <input type="text" id="first_name" name="first_name" maxlength="24" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_name">Last Name</label>
+                                    <input type="text" id="last_name" name="last_name" maxlength="24" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="date_of_birth">Date of Birth</label>
+                                    <input type="date" id="date_of_birth" name="date_of_birth">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" name="password" maxlength="160" required>
+                                </div>
+                                <button type="submit">Register</button>
+                                <div class="form-link">
+                                    <a href="/login">I am already a member</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include 'components/confirmation_overlay.html'%}
+        
+    </div>
+
+    <script>
+        // Show overlay after registration success
+        window.onload = function () {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                const confirmationOverlay = document.getElementById('confirmation-overlay');
+                confirmationOverlay.style.display = 'flex'; // Show overlay
+
+                // Handle confirmation button click
+                document.getElementById('confirm-button').onclick = function (event) {
+                    event.preventDefault();
+                    const confirmationForm = document.getElementById('confirmation-form');
+                    confirmationForm.submit();
+                };
+
+                // Close overlay
+                document.getElementById('overlay-close').onclick = function () {
+                    confirmationOverlay.style.display = 'none';
+                };
+            }
+        };
+    </script>
+</body>
+
+</html>

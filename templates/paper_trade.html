@@ -1,0 +1,872 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+
+    {% include 'components/google_analytics.html'%}
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" id="theme-stylesheet" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
+    <link rel="shortcut icon" href="#" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>ASP - Paper Trading</title>
+    <style>
+        #header {
+            padding: 2.1em 0 1em 0 !important;
+        }
+
+        body {
+            background-color: #000000;
+            color: white;
+            margin: 0;
+        }
+
+        #wrapper-papertrade {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        #main-papertrade {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        #chart-wrapper {
+            flex: 3;
+            width: calc(100% - 256px);
+            max-width: calc(100% - 256px);
+            height: auto;
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+
+        #stock-chart {
+            padding: 10px;
+            background-color: #000000;
+            border: 1px solid #0501fc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #trade-quotes-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 20%;
+            box-sizing: border-box;
+            min-width: 256px;
+        }
+
+        .box {
+            flex-grow: 1;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #000000;
+            border: 1px solid #0501fc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #lower-wrapper {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        #orders-section,
+        #paper-account-detail {
+            position: relative;
+            padding: 10px;
+            background-color: #000000;
+            border: 1px solid #0501fc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            flex: 1;
+        }
+
+        .reset-button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #orders-section {
+            margin-right: 10px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+            color: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #0501fc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2c2f48;
+        }
+
+        td {
+            background-color: #1b1f3a;
+        }
+
+        .header {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .trade-action-button {
+            padding: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+
+        }
+
+        #buy-button {
+            background-color: #28a745;
+        }
+
+        #sell-button {
+            background-color: black;
+        }
+
+        .flash-container {
+            padding: 35px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .flash.success {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .flash.error {
+            background-color: #f44336;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        #controls-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #000000;
+            border-bottom: 1px solid #0501fc;
+            margin-bottom: 10px;
+        }
+
+        .control {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .control label {
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+
+        #wrapper {
+            min-height: 0px !important;
+        }
+
+        header.main> :last-child {
+            margin: 0 0 0.25em 0 !important;
+        }
+
+        .paper-trading {
+            margin-top: 1.5em;
+        }
+
+        /* height: calc(100% - 50px); */
+        #container {
+            width: 100%;
+            height: 834px;
+            margin: auto;
+            max-width: 75vw;
+        }
+
+        /* @media (max-width: 1680px){
+            #container {
+            width: 100%;
+            height: 834px !important;
+            margin: auto;
+            }
+        } */
+
+        @media (max-width: 1340px) {
+            #main-papertrade {
+                flex-direction: column;
+                margin-bottom: -10px;
+
+            }
+
+            #chart-wrapper {
+                width: 100%;
+                max-width: 100%;
+                padding-right: 0;
+                margin-bottom: 10px;
+            }
+
+            #container {
+                height: 450px;
+            }
+
+            #stock-chart {
+                width: 100% !important;
+                height: auto;
+            }
+
+
+            #trade-quotes-wrapper {
+                flex-direction: row;
+                width: 100%;
+                height: auto;
+                margin-top: 10px;
+            }
+
+            #orders-section,
+            #paper-account-detail {
+                width: 50%;
+                margin-top: 10px;
+                margin-right: 0;
+            }
+
+            #orders-section {
+                margin-right: 10px;
+            }
+
+            .quantity-limit-container {
+                display: block;
+            }
+
+            .quantity-limit-container {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .quantity-container,
+            .limit-price-container,
+            .time-in-force-container {
+                flex: 1;
+                margin-right: 10px;
+            }
+
+            .time-in-force-container {
+                margin-right: 0;
+            }
+
+            .quantity-container input,
+            .limit-price-container input,
+            .time-in-force-container select {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .time-in-force-container select {
+                padding: 6px;
+            }
+
+            #wrapper-papertrade {
+                flex-direction: column;
+            }
+
+            #trade-quotes-wrapper {
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+                min-width: 0;
+            }
+
+            #trade-section,
+            #quote-section {
+                flex-grow: 1;
+                flex-basis: 50%;
+                flex-shrink: 1;
+            }
+        }
+
+        @media (max-width: 800px) {
+            #wrapper-papertrade {
+                flex-direction: column;
+            }
+
+            #chart-wrapper {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-right: 0;
+            }
+
+            #stock-chart {
+                width: 100% !important;
+                height: auto;
+            }
+
+            #trade-quotes-wrapper {
+                flex-direction: column;
+                width: 100%;
+                min-width: 0;
+                margin: 0px !important;
+            }
+
+            #trade-section,
+            #quote-section {
+                width: 100%;
+            }
+
+            #lower-wrapper {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            #paper-account-detail {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            #orders-section {
+                min-height: 400px !important;
+                width: 100%;
+
+            }
+        }
+
+        @media (max-width: 600px) {
+            #controls-container .control select {
+                width: 30px;
+                height: 30px;
+                padding: 0;
+                text-indent: -9999px;
+                background-color: transparent;
+                border: 1px solid #ffffff !important;
+                /* Keep the border */
+                appearance: none;
+                /* Remove default arrow */
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                position: relative;
+                display: flex;
+                /* Use flexbox to center the content */
+                align-items: center;
+                /* Vertically center */
+                justify-content: center;
+                /* Horizontally center */
+            }
+
+            #controls-container .control select::after {
+                content: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="vertical-align: middle;"><path d="M6 9l6 6 6-6"></path></svg>');
+                position: absolute;
+                pointer-events: none;
+                /* Make sure the arrow doesn't interfere with clicks */
+            }
+        }
+
+        @media (max-width: 460px) {
+
+            body,
+            th,
+            td,
+            .header,
+            .trade-action-button,
+            .flash-container,
+            .control label,
+            #controls-container,
+            .quantity-container input,
+            .limit-price-container input,
+            .time-in-force-container select {
+                font-size: 9pt;
+            }
+        }
+    </style>
+
+    <!-- Embed JSON data directly in the HTML -->
+    <script type="application/json" id="holdings-data">
+            {{ holdings|tojson|safe }}
+        </script>
+
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/stock/indicators/indicators-all.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
+
+</head>
+
+<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                {% include 'components/base_header.html'%}
+
+                <!-- Content -->
+                <div class="paper-trading">
+                    <header class="main">
+                        <h1>ASP Paper Trading</h1>
+                    </header>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div id="wrapper-papertrade">
+
+        <!-- Upper Section: Chart and Trade/Quotes -->
+        <div id="main-papertrade">
+
+            <div id="chart-wrapper">
+
+                <div id="stock-chart">
+
+                    {% include 'components/papertrade_options.html'%}
+
+                    <div id="container"></div>
+                    <script src="static\js\preload.js"></script>
+                    <script>
+
+                        function viewStock(stock) {
+                            const newSymbol = stock.target.value;
+                            console.log(newSymbol);
+
+                            updateTradingViewWidget(newSymbol);
+
+                        }
+
+                        function updateTradingViewWidget(symbol) {
+                            // Find the widget container
+                            const container = document.querySelector('.tradingview-widget-container');
+
+                            // Remove the existing script and widget content
+                            container.innerHTML = '<div class="tradingview-widget-container__widget"></div>';
+
+                            // Create a new script element
+                            const script = document.createElement('script');
+                            script.type = 'text/javascript';
+                            script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js';
+                            script.async = true;
+
+                            // Set the new configuration for the widget
+                            script.innerHTML = `
+                                {
+                                    "symbol": "${symbol}",
+                                        "width": "100%",
+                                            "locale": "en",
+                                                "colorTheme": "dark",
+                                                    "isTransparent": true
+                                }`;
+
+                            // Append the new script to the container
+                            container.appendChild(script);
+                        }
+
+
+                        function runScript() {
+                            return new Promise((resolve, reject) => {
+                                stockCode = document.querySelector('#stock-search');
+                                stockTicker = stockCode.value;
+
+                                console.log('Ticker: ', stockTicker)
+                                fetch(`/run-python?ticker=${stockTicker}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+
+                                        resolve();
+                                        return data;
+
+                                    })
+                                    .catch(error => console.error('Error:', error));
+
+
+                            })
+                        }
+
+                        document.getElementById('stock-search').addEventListener('change', function () {
+                            (async () => {
+
+                                x = await runScript();
+
+                                const response = await fetch(`/static/temp/temp.json?timestamp=${new Date().getTime()}`);
+                                const data = await response.json();
+
+
+                                // split the data set into ohlc and volume
+                                const ohlc = [],
+                                    volume = [],
+                                    dataLength = data.length;
+
+                                for (let i = 0; i < dataLength; i += 1) {
+                                    ohlc.push([
+                                        data[i][0], // the date
+                                        data[i][1], // open
+                                        data[i][2], // high
+                                        data[i][3], // low
+                                        data[i][4] // close
+                                    ]);
+
+                                    volume.push([
+                                        data[i][0], // the date
+                                        data[i][5] // the volume
+                                    ]);
+                                }
+
+                                // create the chart
+                                Highcharts.stockChart('container', {
+                                    chart: {
+                                        height: null,
+                                        width: null
+                                    },
+                                    title: {
+                                        text: `${stockTicker} - Historical`
+                                    },
+                                    subtitle: {
+                                        text: 'All indicators'
+                                    },
+                                    accessibility: {
+                                        series: {
+                                            descriptionFormat: '{seriesDescription}.'
+                                        },
+                                        description: 'Use the dropdown menus above to display different ' +
+                                            'indicator series on the chart.',
+                                        screenReaderSection: {
+                                            beforeChartFormat: '<{headingTagName}>' +
+                                                '{chartTitle}</{headingTagName}><div>' +
+                                                '{typeDescription}</div><div>{chartSubtitle}</div><div>' +
+                                                '{chartLongdesc}</div>'
+                                        }
+                                    },
+                                    legend: {
+                                        enabled: true
+                                    },
+                                    rangeSelector: {
+                                        selected: 2
+                                    },
+                                    yAxis: [{
+                                        height: '60%'
+                                    }, {
+                                        top: '60%',
+                                        height: '15%'
+                                    }, {
+                                        top: '85%',
+                                        height: '25%'
+                                    }],
+                                    plotOptions: {
+                                        series: {
+                                            showInLegend: true,
+                                            accessibility: {
+                                                exposeAsGroupOnly: true
+                                            },
+
+                                        }
+                                    },
+                                    series: [{
+                                        type: 'candlestick',
+                                        id: stockTicker,
+                                        name: stockTicker,
+                                        data: data
+                                    }, {
+                                        type: 'column',
+                                        id: 'volume',
+                                        name: 'Volume',
+                                        data: volume,
+                                        yAxis: 1
+                                    }, {
+                                        type: 'pc',
+                                        id: 'overlay',
+                                        linkedTo: stockTicker,
+                                        yAxis: 0,
+                                        marker: {
+                                            enabled: false
+                                        },
+                                    }, {
+                                        type: 'macd',
+                                        id: 'oscillator',
+                                        linkedTo: stockTicker,
+                                        yAxis: 2
+                                    }]
+                                }, function (chart) {
+                                    document.getElementById(
+                                        'overlays'
+                                    ).addEventListener('change', function (e) {
+                                        const series = chart.get('overlay');
+
+                                        if (series) {
+                                            series.remove(false);
+                                            chart.addSeries({
+                                                type: e.target.value,
+                                                linkedTo: stockTicker,
+                                                id: 'overlay',
+                                                marker: {
+                                                    enabled: false
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                    // Add resize event listener
+                                    window.addEventListener('resize', function () {
+                                        setTimeout(() => {
+                                            if (chart) {
+                                                chart.reflow(); // Redraw the chart to fit the new container size
+                                            }
+                                        }, 100);
+                                    });
+
+
+                                    document.getElementById(
+                                        'oscillators'
+                                    ).addEventListener('change', function (e) {
+                                        const series = chart.get('oscillator');
+
+                                        if (series) {
+                                            series.remove(false);
+                                            chart.addSeries({
+                                                type: e.target.value,
+                                                linkedTo: stockTicker,
+                                                id: 'oscillator',
+                                                yAxis: 2,
+                                                marker: {
+                                                    enabled: false
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            })();
+                        })
+
+
+                    </script>
+                </div>
+            </div>
+
+            <div id="trade-quotes-wrapper">
+                <div id="trade-section" class="box">
+                    <div class="header">Trade</div>
+                    <form action="{{ url_for('trade') }}" method="post">
+                        <label for="ticker">Stock Ticker:</label>
+                        <input type="text" id="ticker" name="ticker" required>
+                        <br>
+
+                        <!-- Buy and Sell Buttons -->
+                        <div class="action-buttons">
+                            <button type="button" id="buy-button" class="trade-action-button">BUY</button>
+                            <button type="button" id="sell-button" class="trade-action-button">SELL</button>
+                        </div>
+
+                        <!-- Hidden input to store the selected action -->
+                        <input type="hidden" id="action" name="action" value="BUY">
+                        <br>
+
+                        <!-- Quantity, Limit Price, and Time-in-Force in the same line -->
+                        <div class="quantity-limit-container">
+                            <div class="quantity-container">
+                                <label for="quantity">Quantity:</label>
+                                <input type="number" id="quantity" name="quantity" required>
+                            </div>
+
+                            <div class="limit-price-container">
+                                <label for="limit_price">Limit Price:</label>
+                                <input type="number" id="limit_price" name="limit_price">
+                            </div>
+
+                            <div class="time-in-force-container">
+                                <label for="time_in_force">Time-in-Force:</label>
+                                <select id="time_in_force" name="time_in_force">
+                                    <option value="Day">Day</option>
+                                    <option value="GTC">GTC (Good 'Til Cancelled)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="button">Execute Trade</button>
+                    </form>
+                </div>
+
+
+
+                <div id="quotes-section" class="box">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript"
+                            src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js" async>
+                                {
+                                    "symbol": "AAPL",
+                                        "width": "99%",
+                                            "height": "100%",
+                                                "locale": "en",
+                                                    "colorTheme": "dark",
+                                                        "isTransparent": true
+                                }
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lower Section: Current Positions and Paper Account Detail -->
+        <div id="lower-wrapper">
+            <div id="orders-section">
+                <div class="header">Current Positions</div>
+                <div id="myGrid" class="ag-theme-alpine" style="width: 100%; height: 83.5%; overflow: auto;"></div>
+
+                <script
+                    src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        // Retrieve JSON data from the script tag
+                        const jsonData = document.getElementById('holdings-data').textContent;
+                        const rowData = JSON.parse(jsonData);
+
+                        // Initialize AG Grid
+                        const gridOptions = {
+                            columnDefs: [
+                                { headerName: 'Ticker', field: 'ticker', flex: 1 },
+                                { headerName: 'Quantity', field: 'quantity', flex: 1 },
+                                {
+                                    headerName: 'Average Price $',
+                                    field: 'average_price',
+                                    flex: 1,
+                                    valueFormatter: function (params) {
+                                        // Format average price to 2 decimal places
+                                        return parseFloat(params.value).toFixed(2);
+                                    }
+                                },
+                                {
+                                    headerName: 'Total  $',
+                                    valueGetter: function (params) {
+                                        // Calculate total value
+                                        const quantity = params.data.quantity || 0;
+                                        const lastPrice = params.data.last_price || 0;
+                                        return quantity * lastPrice;
+                                    },
+                                    valueFormatter: function (params) {
+                                        return parseFloat(params.value).toFixed(2);
+                                    }
+                                },
+                                {
+                                    headerName: 'Last Price $',
+                                    field: 'last_price',
+                                    valueFormatter: function (params) {
+                                        return parseFloat(params.value).toFixed(2);
+                                    }
+                                }
+                            ],
+                            rowData: rowData,
+                            domLayout: 'normal'
+                        };
+
+                        // Set up the AG Grid
+                        const gridDiv = document.getElementById('myGrid');
+                        new agGrid.Grid(gridDiv, gridOptions);
+                    });
+
+                </script>
+            </div>
+
+            <div id="paper-account-detail">
+                <div class="header">Paper Account Detail</div>
+
+                <!-- Reset Button Container -->
+                <div class="reset-button-container">
+                    <form action="{{ url_for('reset_portfolio') }}" method="post">
+                        <button type="submit">Reset Portfolio</button>
+                    </form>
+                </div>
+
+                <form action="{{ url_for('update_portfolio') }}" method="post">
+                    <label for="portfolio_value">Set Initial Portfolio Value:</label>
+                    <input type="number" id="portfolio_value" name="portfolio_value" step="0.01" min="0" value="{{ "
+                        {:.2f}".format(portfolio_value) }}" {{ 'disabled' if current_user.portfolio_locked }}>
+                    <button type="submit" {{ 'disabled' if current_user.portfolio_locked }}>Update
+                        Portfolio</button>
+                </form>
+
+                <p>Current Portfolio Value: ${{ "{:.2f}".format(portfolio_value) }}</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+            // Scroll to the flash message container
+            if ($('.flash-container').length) {
+                $('html, body').animate({
+                    scrollTop: $('.flash-container').offset().top
+                }, 1000);
+
+                // Show the flash message container and then fade it out after 3 seconds
+                $('.flash-container').fadeIn('fast', function () {
+                    $(this).delay(3000).fadeOut('slow');
+                });
+            }
+        });
+
+        $(document).ready(function () {
+            $("#buy-button").click(function () {
+                $("#buy-button").css("background-color", "#28a745");
+                $("#sell-button").css("background-color", "black");
+                $("#action").val("BUY");
+            });
+
+            $("#sell-button").click(function () {
+                $("#buy-button").css("background-color", "black");
+                $("#sell-button").css("background-color", "#dc3545");
+                $("#action").val("SELL");
+            });
+        });
+
+
+    </script>
+
+</body>
+
+</html>

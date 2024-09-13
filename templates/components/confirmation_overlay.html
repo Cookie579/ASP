@@ -1,0 +1,9 @@
+<!-- Confirmation Overlay -->
+<div id="confirmation-overlay" style="display: {% if confirmation %}flex{% else %}none{% endif %};">
+  <form action="/confirm" method="POST" id="confirmation-form">
+      <label for="confirmation_code">Enter Confirmation Code:</label>
+      <input type="text" id="confirmation_code" name="confirmation_number" required>
+      <button type="submit" id="confirm-button">Confirm</button>
+  </form>
+  <div id="overlay-close">Close</div>
+</div>

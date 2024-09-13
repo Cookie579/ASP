@@ -1,0 +1,149 @@
+<!-- /templates/components/sidebar.html -->
+
+<style>
+    #sidebar nav#menu:nth-of-type(2) .opener+ul {
+        background-color: #000000;
+        padding: 0;
+        border-radius: 10px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        border: 2px solid #fff;
+        text-align: center;
+    }
+
+    #sidebar nav#menu:nth-of-type(2) .opener+ul li a {
+        color: #fff;
+        padding: 6px 8px;
+        text-decoration: none;
+        display: block;
+        font-size: 0.8em;
+        border-bottom: 2px solid #333;
+        border-radius: 10px;
+        transition: background-color 0.3s;
+    }
+
+    #sidebar nav#menu:nth-of-type(2) .opener+ul li a:hover {
+        background-color: #444;
+        color: #fff;
+    }
+</style>
+<div id="sidebar">
+    <div class="inner">
+        <!-- Menu -->
+        <nav id="menu">
+            <header class="major">
+                <h2>Menu</h2>
+            </header>
+            <ul>
+                <li><a href="/">Homepage</a></li>
+                <li><a href="/stock-viewer">Stock Viewer</a></li>
+                <li>
+                    <span class="opener">Articles</span>
+                    <ul>
+                        <li><a href="/b-and-b-bro">Brown and Brown Inc (BRO) Investment Idea</a></li>
+                        <li><a href="/palo-alto-panw">Palo Alto (PANW) Investment Idea</a></li>
+                        <li><a href="/articles">All Articles...</a></li>
+                    </ul>
+                </li>
+                <li><a href="/asp-portfolio">ASP Portfolio</a></li>
+                <li>
+                    <span class="opener">Training</span>
+                    <ul>
+                        <li><a href="#" style="color: red;">Coming Soon!</a></li>
+                    </ul>
+                </li>
+                <li><a href="/home">Paper Trading</a></li>
+                <li><a href="/QTI">Quick Trade Ideas</a></li>
+            </ul>
+        </nav>
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>Recent Articles</h2>
+            </header>
+            <div class="mini-posts">
+                <article>
+                    <a href="/b-and-b-bro" class="image"><img
+                            src="{{ url_for('static', filename='images/b-and-b-sidebar.jpg') }}" alt="" /></a>
+                    <p>Brown & Brown, Inc. is one of the largest independent insurance brokerage firms in the United
+                        States, headquartered in Daytona Beach and Tampa, Florida. Founded in 1939, the company has
+                        grown to become the sixth largest independent insurance brokerage...</p>
+                </article>
+                <article>
+                    <a href="/palo-alto-panw" class="image"><img
+                            src="{{ url_for('static', filename='images/panw-sidebar.jpg') }}" alt="" /></a>
+                    <p>Palo Alto Networks is a major cybersecurity company that provides comprehensive security
+                        platforms to protect organizations from various digital threats. Their offerings include
+                        next-gen firewalls, cloud security solutions, endpoint protection, and AI-powered threat
+                        detection and prevention tools...</p>
+                </article>
+            </div>
+            <ul class="actions">
+                <li><a href="#" class="button">More</a></li>
+            </ul>
+        </section>
+
+        <!-- Menu -->
+        <nav id="menu">
+            <header class="major">
+                <h2>Recent Changes</h2>
+            </header>
+            <ul>
+                {% if g.recent_changes %}
+                    {% for change in g.recent_changes %}
+                    <li>
+                        <span class="opener">{{ change.date }}</span>
+                        <ul>
+                            {% for detail in change.changes %}
+                            <li><a>{{ detail }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li>No recent changes available.</li>
+                {% endif %}
+                <li><a href="/portfolio-updates">More...</a></li>
+            </ul>
+        </nav>
+        <script>
+            // Grab all elements with class "opener"
+            const openers = document.querySelectorAll('.opener');
+
+            // Loop through each opener and attach a click event
+            openers.forEach(opener => {
+                opener.addEventListener('click', () => {
+                    const dropdown = opener.nextElementSibling;  // Find the corresponding dropdown-content
+
+                    // Toggle dropdown visibility
+                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                });
+            });
+        </script>
+
+
+        <!-- Section -->
+        <section>
+            <header class="major">
+                <h2>Get in touch</h2>
+            </header>
+            <p>Have thoughts or suggestions about our stock pick service? We're always looking to improve and would
+                appreciate hearing from you. Your insights help us refine our offerings and ensure we're providing the
+                best possible experience.</p>
+            <ul class="contact">
+                <li class="icon solid fa-envelope"><a href="#">Agasthya.mc@gmail.com</a></li>
+                <li class="icon solid fa-phone">(437) 974-7032</li>
+                <!-- <li class="icon solid fa-home">1234 Somewhere Road #8254<br />
+                  Nashville, TN 00000-0000</li> -->
+            </ul>
+        </section>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <!-- <p class="copyright">&copy; ASP. All rights reserved. Demo Images: <a
+                    href="https://unsplash.com">Unsplash</a>.</p> -->
+
+            <p class="copyright">&copy; ASP. All rights reserved.</p>
+        </footer>
+    </div>
+</div>

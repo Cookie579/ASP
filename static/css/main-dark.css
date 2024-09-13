@@ -1,0 +1,160 @@
+/* Dark Mode Styling */
+.darkmode,
+.darkmode input,
+.darkmode select,
+.darkmode textarea {
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.darkmode a {
+    color: #0501fc;
+}
+
+.darkmode a:hover {
+    border-bottom-color: #0501fc;
+    color: #0501fc !important;
+}
+
+.darkmode strong,
+.darkmode b,
+.darkmode h1,
+.darkmode h2,
+.darkmode h3,
+.darkmode h4,
+.darkmode h5,
+.darkmode h6 {
+    color: #ffffff;
+}
+
+.darkmode blockquote {
+    border-left: solid 3px rgba(45, 40, 38, 0.25);
+}
+
+.darkmode code {
+    background: rgba(25, 20, 18, 0.75);
+    border: solid 1px rgba(45, 40, 38, 0.25);
+}
+
+.darkmode hr {
+    border-bottom: solid 1px rgba(45, 40, 38, 0.25);
+}
+
+.darkmode header.major > :last-child {
+    border-bottom: solid 3px #0501fc;
+}
+
+.darkmode ul.alt li,
+.darkmode ul.contact li {
+    border-top: solid 1px rgba(45, 40, 38, 0.25);
+}
+
+.darkmode ul.pagination li > .page.active {
+    background-color: #0501fc;
+    color: #000000 !important;
+}
+
+.darkmode table tbody tr {
+    border: solid 1px rgba(45, 40, 38, 0.25);
+}
+
+.darkmode table tbody tr:nth-child(2n+1) {
+    background-color: rgba(25, 20, 18, 0.75);
+}
+
+.darkmode table th,
+.darkmode label {
+    color: #c2bbd6;
+}
+
+.darkmode table thead,
+.darkmode table tfoot {
+    border-bottom: solid 2px rgba(45, 40, 38, 0.25);
+    border-top: solid 2px rgba(45, 40, 38, 0.25);
+}
+
+.darkmode input[type="submit"]:hover,
+.darkmode input[type="reset"]:hover,
+.darkmode input[type="button"]:hover,
+.darkmode button:hover,
+.darkmode .button:hover {
+    background-color: #0501fcd2;
+}
+
+.darkmode input[type="submit"].primary,
+.darkmode input[type="reset"].primary,
+.darkmode input[type="button"].primary,
+.darkmode button.primary,
+.darkmode .button.primary {
+    background-color: #0501fcd2;
+    color: #000000 !important;
+}
+
+.darkmode input[type="submit"].primary:hover,
+.darkmode input[type="reset"].primary:hover,
+.darkmode input[type="button"].primary:hover,
+.darkmode button.primary:hover,
+.darkmode .button.primary:hover {
+    background-color: #ffffff;
+}
+
+.darkmode .features article .icon:before {
+    color: #0501fc;
+}
+
+.darkmode .posts article:before,
+.darkmode .posts article:after {
+    background: rgba(45, 40, 38, 0.25);
+}
+
+.darkmode #main > .inner > section {
+    border-top: solid 2px rgba(255, 255, 255, 0.25);
+}
+
+.darkmode #sidebar {
+    background-color: RGB(8,9,10); /* Dark mode background color */
+}
+
+.darkmode #sidebar > .inner > * {
+    border-bottom: solid 2px #ffffff5d;
+}
+
+.darkmode #sidebar > .inner > .alt {
+    background-color: #ffffff5d;
+}
+
+.darkmode #sidebar .toggle:before,
+.darkmode #sidebar .toggle:after {
+    color: #0501fc;
+    background: rgb(0, 0, 0);
+}
+
+.darkmode #header {
+    border-bottom: solid 5px #0501fc;
+}
+
+.darkmode #footer .copyright {
+    color: #ffffff;
+}
+
+.darkmode #menu ul {
+    color: #ffffff;
+}
+
+.darkmode #menu ul a:hover,
+.darkmode #menu ul span:hover {
+    color: #0501fc;
+}
+
+.darkmode #menu ul a.opener:before,
+.darkmode #menu ul span.opener:before {
+    color: #0501fc;
+}
+
+.darkmode #menu > ul > li {
+    border-top: solid 1px rgba(45, 40, 38, 0.25);
+}
+
+.darkmode #menu > ul > li > ul {
+    color: #696a85;
+}

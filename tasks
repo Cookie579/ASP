@@ -1,0 +1,18 @@
+<!-- Easy -->
+Add Pin System to Stock - Viewer Dropdown
+Add Better Search and Add Option to Type in OWN Ticker
+Add Colourful highlights and fix login / register CSS
+
+<!-- Time Intensive -->
+Add page for all recent changes
+Write more articles! Beef up the website with content
+
+<!-- Paper Trade -->
+Add more functionality to the paper trading
+Include portfolio history and fix css styling
+
+<!-- Hard / Annoying -->
+Streamline and compartmentalize app.py 
+Move Everything to main.css
+Add LIGHT MODE!
+Fix Sidebar Three Dashes obstructing content when @media width hides sidebar

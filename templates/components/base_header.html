@@ -1,0 +1,122 @@
+<style>
+
+    /* Dropdown content styles */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #000000;
+        min-width: 145px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 5;
+        border-radius: 10px;
+        padding: 0;
+        right: 0;
+        text-align: center;
+        border: 2px solid #fff;
+    }
+
+    /* Dropdown links styles */
+    .dropdown-content a {
+        color: #fff;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        font-size: 14px;
+        border-bottom: 2px solid #333;
+        border-radius: 10px;
+        transition: background-color 0.3s;
+    }
+
+    /* Last item border removal */
+    .dropdown-content a:last-child {
+        border-bottom: none;
+    }
+
+    /* Hover effect for dropdown links */
+    .dropdown-content a:hover {
+        background-color: #444;
+    }
+
+    /* Show the dropdown on hover */
+    .dropdown:hover .dropdown-content,
+    .dropdown-content:hover {
+        display: block;
+    }
+
+    /* Profile image styles */
+    .profile-image,
+    .profile-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #512DA8;
+        font-size: 18px;
+        color: #ffffff;
+        text-align: center;
+        line-height: 40px;
+        margin-right: 10px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .icon-image {
+        width: 40px;
+        height: 40px;
+        margin-left: 10px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+</style>
+
+
+
+<!-- Header -->
+<header id="header">
+    <a href="/" class="logo"><strong class="logo">Axiom</strong> Stock Picks</a>
+    <ul class="icons">
+        <!-- <li><a href="#" class="icon brands fa-linkedin"><span class="label">Twitter</span></a></li> -->
+        <!-- <li>
+                <img src="{{ url_for('static', filename='images/icons/moon.ico') }}" alt="Theme Toggle Icon"
+                    id="themeToggleIcon" class="icon-image">
+
+            </li> -->
+
+        <li class="dropdown">
+            {% if current_user.is_authenticated %}
+            <span class="profile-image" id="profileImage">{{ current_user.first_name[0] }}</span>
+            <a><strong>{{ current_user.first_name }}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
+                        style="vertical-align: middle;">
+                        <path d="M6 9l6 6 6-6"></path>
+                    </svg>
+                </strong></a>
+
+            {% else %}
+            <img src="{{ url_for('static', filename='images/default/default_pfp.svg') }}" alt="Profile"
+                class="profile-placeholder">
+            <a><strong>Account
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
+                        style="vertical-align: middle;">
+                        <path d="M6 9l6 6 6-6"></path>
+                    </svg>
+
+                </strong></a>
+
+            {% endif %}
+
+            <div class="dropdown-content">
+                {% if current_user.is_authenticated %}
+                <a href="/logout"><strong>Logout</strong></a>
+                <!-- <a><strong>Settings</strong></a> -->
+
+                {% else %}
+                <a href="/login"><strong>Login</strong></a>
+                <a href="/register"><strong>Register</strong></a>
+                {% endif %}
+
+            </div>
+        </li>
+    </ul>
+</header>

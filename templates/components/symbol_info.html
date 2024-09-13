@@ -1,0 +1,40 @@
+<template id="symbol-info-template">
+	<div class="tradingview-widget-container">
+		<div id="overlay">
+			<div id="dropdown">
+				<input type="text" placeholder="Search..." id="dropdown-search">
+				<div id="dropdown-options-container">
+					<!-- Recent Searches Section -->
+					<div id="recent-searches">
+						<strong>Recent Searches</strong>
+						<ul id="recent-searches-list">
+							<!-- Recent searches will be dynamically added here -->
+						</ul>
+					</div>
+
+					<hr> <!-- Line break to separate recent searches from all stocks -->
+
+					<!-- All Stocks Section -->
+					<div id="all-stocks">
+						<strong>All Stocks</strong>
+						<ul id="dropdown-options">
+							<!-- Options for all stocks will be dynamically included here -->
+							{% include 'components/options.html' %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tradingview-widget-container__widget"></div>
+		<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js"
+			async>
+				{
+					"symbol": "NASDAQ:AAPL",
+						"width": "100%",
+							"locale": "en",
+								"colorTheme": "dark",
+									"isTransparent": true
+				}
+			</script>
+	</div>
+</template>

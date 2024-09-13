@@ -1,0 +1,132 @@
+{% extends "base.html" %} {% block content %}
+
+<script>
+	document.title = "ASP - All Articles";
+</script>
+
+<style>
+	    .posts article {
+        min-height: 450px; /* Ensure all articles have the same height */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .posts article .actions {
+        margin-top: auto; /* Align buttons at the bottom */
+        text-align: center; /* Optional: Center buttons horizontally */
+    }
+    
+    @media screen and (max-width: 768px) {
+        .posts article {
+            min-height: 350px; /* Adjust height for smaller screens */
+        }
+    }
+</style>
+
+<!-- Content -->
+<section>
+	<header class="main">
+		<h1>All Articles</h1>
+	</header>
+
+	<p>
+		Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in
+		faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis.
+		Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque
+		leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu
+		massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac,
+		pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at,
+		elementum convallis elit. Pellentesque enim turpis, hendrerit.
+	</p>
+	<section>
+		<header class="major">
+			<h2>Explore</h2>
+		</header>
+
+		<div class="posts">
+			<article>
+				<a href="/b-and-b-bro" class="image"><img src="{{ url_for('static', filename='images/b-and-b-sidebar.jpg') }}"
+						alt="" /></a>
+				<h3>Brown and Brown Inc (BRO) Investment Idea</h3>
+				<p class="front-page-p">
+					Brown & Brown, Inc. is one of the largest independent insurance brokerage firms in the United
+					States, headquartered in Daytona Beach and Tampa, Florida. Founded in 1939, the company has
+					grown to become the sixth largest independent insurance brokerage...
+				</p>
+				<ul class="actions">
+					<li><a href="/b-and-b-bro" class="button">More</a></li>
+				</ul>
+			</article>
+			<article>
+				<a href="/palo-alto-panw" class="image"><img src="{{ url_for('static', filename='images/panw-sidebar.jpg') }}"
+						alt="" /></a>
+				<h3>Palo Alto (PANW) Investment Idea</h3>
+				<p class="front-page-p">
+					Palo Alto Networks is a major cybersecurity company that provides comprehensive security
+					platforms to protect organizations from various digital threats. Their offerings include
+					next-gen firewalls, cloud security solutions, endpoint protection, and AI-powered threat
+					detection and prevention tools...
+				</p>
+				<ul class="actions">
+					<li><a href="/palo-alto-panw" class="button">More</a></li>
+				</ul>
+			</article>
+			<article>
+				<a href="/asp-portfolio" class="image"><img src="static/images/asp-portfolio.jpg" alt="" /></a>
+				<h3>The ASP Portfolio</h3>
+				<p class="front-page-p">
+					Here you can find a detailed view of the current portfolio, including targets, stop loss,
+					and other key data for each stock. You can explore the full portfolio as well as quick trade
+					idea performance, which are higher-risk picks without detailed articles. This page gives you a
+					look at both the long-term and shorter-term trading opportunities.
+				</p>
+				<ul class="actions">
+					<li><a href="/asp-portfolio" class="button">More</a></li>
+				</ul>
+			</article> 
+			<!-- <article>
+				<a href="#" class="image"><img src="static/images/asp-wall-street.jpg" alt="" /></a>
+				<h3>Training</h3>
+				<p class="front-page-p">
+					The Training section offers short blogs covering a range of topics to boost financial
+					literacy and help first-time traders improve their skills. It's designed to provide valuable insights
+					and tips for anyone looking to grow their knowledge in the trading world.
+				</p>
+				<p class="red"> Coming Soon!</p>
+				<ul class="actions">
+					<li><a href="#" class="button">More</a></li>
+				</ul>
+			</article>
+			<article>
+				<a href="/home" class="image"><img src="static/images/asp-paper-trade.jpg" alt="" /></a>
+				<h3>Paper Trading</h3>
+				<p class="front-page-p">
+					Our paper trading system lets you buy and sell stocks with real-time data using an intuitive
+					platform packed with charts and technical tools. It’s perfect for practicing your trading
+					skills and testing strategies without any financial risk, giving you the confidence to refine
+					your approach before entering the real market.
+				</p>
+				<ul class="actions">
+					<li><a href="/home" class="button">More</a></li>
+				</ul>
+			</article>
+			<article>
+				<a href="/QTI" class="image"><img src="static/images/asp-QTI.jpg" alt="" /></a>
+				<h3>Quick Trade Ideas</h3>
+				<p class="front-page-p">
+					The Quick Trades page features short-term, higher-risk opportunities in shorts, stocks, and
+					options, tailored for those seeking fast market action. These trades don’t come with the
+					detailed analysis found in our regular portfolio, so be sure to do your own research before
+					diving in.
+				</p>
+				<ul class="actions">
+					<li><a href="/QTI" class="button">More</a></li>
+				</ul>
+			</article>
+		</div> --> 
+	</section>
+
+</section>
+
+{% endblock %}

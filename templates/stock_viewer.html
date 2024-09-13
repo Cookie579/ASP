@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+	document.title = "ASP - Stocks";
+</script>
+
+<style>
+	:root {
+		--gap-size: 32px;
+		box-sizing: border-box;
+		font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
+		color: #000;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	main {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--gap-size);
+	}
+
+	.span-full-grid,
+	#advanced-chart {
+		grid-column: span 2;
+	}
+
+	#symbol-info {
+		grid-column: span 2;
+		padding-top: 50px;
+		position: relative;
+		overflow: visible;
+	}
+
+	#company-profile,
+	#technical-analysis,
+	#fundamental-data,
+	#top-stories {
+		grid-column: span 1;
+	}
+
+	#advanced-chart {
+		height: 600px;
+	}
+
+	#company-profile,
+	#technical-analysis {
+		height: 450px;
+	}
+
+	#fundamental-data,
+	#top-stories {
+		height: 500px;
+	}
+
+	.screener-container {
+		padding-top: 50px;
+		padding-bottom: 50px;
+	}
+
+	@media (max-width: 800px) {
+
+		main>section,
+		.span-full-grid,
+		#technical-analysis,
+		#top-stories {
+			grid-column: span 2;
+		}
+	}
+
+	#symbol-info {
+		position: relative !important;
+		overflow: visible !important;
+		grid-column: span 2 !important;
+		z-index: 2 !important;
+	}
+
+	#overlay {
+		position: absolute !important;
+		top: 60px !important;
+		left: 0 !important;
+		width: 30% !important;
+		height: 32% !important;
+		background-color: rgba(211, 42, 42, 0) !important;
+		min-width: 95% !important;
+		z-index: 3 !important;
+		cursor: pointer !important;
+	}
+
+	#symbol-info .tradingview-widget-container__widget {
+		position: absolute;
+		z-index: 2;
+		color: white;
+	}
+
+	#dropdown {
+		display: none;
+		position: absolute !important;
+		top: calc(100% + 5px) !important;
+		left: 0 !important;
+		width: 50% !important;
+		background-color: #000000 !important;
+		box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2) !important;
+		z-index: 4 !important;
+		padding: 10px !important;
+		box-sizing: border-box !important;
+		color: #000 !important;
+		overflow: visible !important;
+		overflow-y: auto !important;
+		max-height: 600px !important;
+		border: 4px solid #d6d6d6 !important;
+		border-radius: 10px !important;
+	}
+
+	#dropdown input[type="text"] {
+		width: 100% !important;
+		padding: 8px !important;
+		box-sizing: border-box !important;
+		margin-bottom: 10px !important;
+		border: 1px solid #555 !important;
+		background-color: #222 !important;
+		color: #fff !important;
+	}
+
+	#dropdown ul {
+		list-style: none !important;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+
+	#dropdown ul li {
+		padding: 8px !important;
+		background-color: #202020 !important;
+		border-bottom: 1px solid #555 !important;
+		cursor: pointer !important;
+		transition: background-color 0.3s !important;
+		color: #fff;
+	}
+
+	#dropdown ul li:hover {
+		background-color: #555 !important;
+	}
+
+	@media (max-width: 890px) {
+		#overlay {
+			width: 100% !important;
+			min-width: unset !important;
+			max-width: unset !important;
+		}
+
+		#dropdown {
+			min-width: unset !important;
+			max-width: unset !important;
+		}
+	}
+
+	@media (max-width: 800px) {
+
+		main>section,
+		.span-full-grid,
+		#technical-analysis,
+		#top-stories,
+		#company-profile,
+		#fundamental-data {
+			grid-column: span 2;
+		}
+	}
+
+	#dropdown-options-container {
+		padding: 5px;
+	}
+
+	#recent-searches,
+	#all-stocks {
+		margin-bottom: 10px;
+	}
+
+	#recent-searches strong,
+	#all-stocks strong {
+		font-size: 0.8em;
+		color: #ccc;
+	}
+
+	hr {
+		border: 0;
+		border-top: 1px solid #555;
+		margin: 10px 0;
+	}
+</style>
+
+<main>
+	<section id="symbol-info"></section>
+	<section id="advanced-chart"></section>
+	<section id="company-profile"></section>
+	<section id="technical-analysis"></section>
+	<section id="fundamental-data"></section>
+	<section id="top-stories"></section>
+</main>
+
+
+{% include 'components/symbol_info.html'%}
+{% include 'components/chart.html'%}
+{% include 'components/company_profile.html'%}
+{% include 'components/fundemental_data.html'%}
+{% include 'components/technical_analysis.html'%}
+{% include 'components/top_stories.html'%}
+{% include 'components/screener.html'%}
+
+<script>
+	function getQueryParam(param) {
+		let urlSearchParams = new URLSearchParams(window.location.search);
+		return urlSearchParams.get(param);
+	}
+
+	function readSymbolFromQueryString() {
+		return getQueryParam('tvwidgetsymbol');
+	}
+
+	function cloneTemplateInto(templateId, targetId, rewrites) {
+		const tmpl = document.querySelector(`#${templateId}`);
+		if (!tmpl) return;
+		const target = document.querySelector(`#${targetId}`);
+		if (!target) return;
+		target.innerText = '';
+		const clone = tmpl.content.cloneNode(true);
+		if (rewrites) {
+			const script = clone.querySelector('script');
+			script.textContent = rewrites(script.textContent);
+		}
+		target.appendChild(clone);
+	}
+
+	const symbol = readSymbolFromQueryString() || 'NASDAQ:AAPL';
+	function setSymbol(scriptContent) {
+		return scriptContent.replace(/"symbol": "([^"]*)"/g, () => {
+			return `"symbol": "${symbol}"`;
+		});
+	}
+
+	cloneTemplateInto('symbol-info-template', 'symbol-info', setSymbol);
+	cloneTemplateInto('advanced-chart-template', 'advanced-chart');
+	cloneTemplateInto('company-profile-template', 'company-profile', setSymbol);
+	cloneTemplateInto('fundamental-data-template', 'fundamental-data', setSymbol);
+	cloneTemplateInto('technical-analysis-template', 'technical-analysis', setSymbol);
+	cloneTemplateInto('top-stories-template', 'top-stories', setSymbol);
+
+	if (symbol) {
+		document.title = `ASP - Stocks - ${symbol}`;
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const overlay = document.getElementById('overlay');
+		const dropdown = document.getElementById('dropdown');
+		let isDropdownClicked = false;
+
+		overlay.addEventListener('click', function () {
+			// Toggle the dropdown
+			dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+		});
+
+		document.addEventListener('click', function (event) {
+			if (dropdown.style.display === 'block') {
+				if (!dropdown.contains(event.target) && !overlay.contains(event.target)) {
+					dropdown.style.display = 'none';
+				}
+			}
+		});
+
+		dropdown.addEventListener('click', function () {
+			isDropdownClicked = true;
+		});
+
+		document.getElementById('dropdown-search').addEventListener('input', function () {
+			const filter = this.value.toUpperCase();
+			const ul = document.getElementById('dropdown-options');
+			const li = ul.getElementsByTagName('li');
+
+			for (let i = 0; i < li.length; i++) {
+				const txtValue = li[i].textContent || li[i].innerText;
+				if (txtValue.toUpperCase().indexOf(filter) > -1) {
+					li[i].style.display = "";
+				} else {
+					li[i].style.display = "none";
+				}
+			}
+		});
+
+		// Add click event listener to dropdown options
+		const options = document.querySelectorAll('#dropdown-options li');
+		options.forEach(option => {
+			option.addEventListener('click', function () {
+				const symbol = this.getAttribute('value');
+				saveRecentSearch(symbol); // Save the search to local storage
+				window.location.href = `https://www.aspfinances.com/stock-viewer?tvwidgetsymbol=${symbol}`;
+			});
+		});
+
+		// Prevent closing dropdown when clicking inside
+		dropdown.addEventListener('click', function (event) {
+			event.stopPropagation();
+		});
+
+		// Update recent searches UI on load
+		updateRecentSearchesUI();
+	});
+
+	// Recent Searches Functions
+	const MAX_RECENT_SEARCHES = 5;
+
+	function getRecentSearches() {
+		let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+		return recentSearches;
+	}
+
+	function saveRecentSearch(symbol) {
+		let recentSearches = getRecentSearches();
+		// Remove the symbol if it already exists
+		recentSearches = recentSearches.filter(search => search !== symbol);
+		// Add the symbol to the beginning of the array
+		recentSearches.unshift(symbol);
+		// Keep only the most recent searches
+		if (recentSearches.length > MAX_RECENT_SEARCHES) {
+			recentSearches.pop();
+		}
+		localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+	}
+
+	function updateRecentSearchesUI() {
+		const recentSearchesList = document.getElementById('recent-searches-list');
+		if (!recentSearchesList) return;
+
+		const recentSearches = getRecentSearches();
+		recentSearchesList.innerHTML = ''; // Clear previous content
+
+		recentSearches.forEach(symbol => {
+			const li = document.createElement('li');
+			li.textContent = symbol;
+			li.setAttribute('value', symbol);
+			li.addEventListener('click', function () {
+				window.location.href = `https://www.aspfinances.com//stock-viewer?tvwidgetsymbol=${symbol}`;
+			});
+			recentSearchesList.appendChild(li);
+		});
+	}
+</script>
+
+{% endblock %}

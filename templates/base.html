@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+
+    {% include 'components/google_analytics.html'%}
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" id="theme-stylesheet" />
+    <link rel="shortcut icon" href="#" />
+
+    <title>Axiom Stock Picks</title>
+
+</head>
+
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+
+                {% include 'components/base_header.html'%}
+
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        {% include 'components/sidebar.html' %}
+
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+
+</html>
