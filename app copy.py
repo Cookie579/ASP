@@ -1,52 +1,32 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, g, session
 from flask_mailman import Mail, EmailMessage
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import yfinance as yf
 import bcrypt
-from pymongo import MongoClient
-from bson.objectid import ObjectId
+from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import pytz
 import pandas as pd
 import subprocess, os, json
 import random, string
-from urllib.parse import quote_plus
-from dotenv import load_dotenv
+
 
 # Init ---------------------------------------------------------------------------------------------------------------------------
-load_dotenv()  # Load environment variables from .env file
-
 mail = Mail()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-
-# MongoDB Configuration
-# Your MongoDB credentials
-username = os.getenv('MONGO_USERNAME')
-password = os.getenv('MONGO_PASSWORD')
-
-# URL-encode the credentials
-encoded_username = quote_plus(username)
-encoded_password = quote_plus(password)
-
-# Build the MongoDB URI with encoded credentials
-mongo_uri = f"mongodb+srv://{encoded_username}:{encoded_password}@asptest.uvb9c.mongodb.net/"
-
-# Initialize MongoDB client
-client = MongoClient(mongo_uri)
-db = client['stock_app']
-users_collection = db['users']
-trades_collection = db['trades']
-
+app.config['SECRET_KEY'] = '+CfgC^B^]+<j0(B*&Tti:3|Muf3-1L'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 # Mailing
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_USERNAME'] = 'warrenharold119@gmail.com'
+app.config['MAIL_PASSWORD'] = 'tpkq mqzx fdby eyjh'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
@@ -72,45 +52,65 @@ def get_recent_changes():
     return data[:5]
 
 # SQL Management
-# MongoDB User Model
-class User(UserMixin):
-    def __init__(self, user_data):
-        self.id = str(user_data['_id'])
-        self.email = user_data['email']
-        self.password = user_data['password']
-        self.first_name = user_data['first_name']
-        self.last_name = user_data['last_name']
-        self.date_of_birth = user_data.get('date_of_birth')
-        self.phone_number = user_data.get('phone_number')
-        self.portfolio_value = user_data.get('portfolio_value', 0.0)
-        self.portfolio_locked = user_data.get('portfolio_locked', False)
-        self.confirmation_number = user_data.get('confirmation_number')
-        self.email_confirmed = user_data.get('email_confirmed', False)
+# SQL Database
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
 
+    # username = db.Column(db.String(150), unique=True, nullable=False)
+    
+    first_name = db.Column(db.String(150), nullable=False)
+    last_name = db.Column(db.String(150))
+    date_of_birth = db.Column(db.Date)
+    phone_number = db.Column(db.String(50))
+    portfolio_value = db.Column(db.Float, default=0.0)
+    portfolio_locked = db.Column(db.Boolean, default=False)
+    confirmation_number = db.Column(db.String(50), default=False)
+    email_confirmed = db.Column(db.Boolean, default=False)
+
+class Trade(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    ticker = db.Column(db.String(10), nullable=False)
+    action = db.Column(db.String(4), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    total_value = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(pytz.timezone('US/Eastern')).replace(microsecond=0))
+
+# SQL Retriever
 @login_manager.user_loader
 def load_user(user_id):
-    user_data = users_collection.find_one({"_id": ObjectId(user_id)})
-    if user_data:
-        return User(user_data)
-    return None
+    return User.query.get(int(user_id))
 
 # Index ---------------------------------------------------------------------------------------------------------------------------------
 @app.route('/')
 def start():
+
     if current_user.is_authenticated:
-        trades = list(trades_collection.find({"user_id": current_user.id}))
-        updated_user = users_collection.find_one({"_id": ObjectId(current_user.id)})
-        portfolio_value = updated_user['portfolio_value']
+        trades = Trade.query.filter_by(user_id=current_user.id).all()
+
+        Session = sessionmaker(bind=db.engine)
+        session = Session()
+        updated_user = session.get(User, current_user.id)
+
+        portfolio_value = updated_user.portfolio_value
+        print(f"Portfolio Value in Home Route: {portfolio_value}")
+
         holdings = calculate_current_holdings(current_user.id)
+
         return render_template('index.html')
+        # return render_template('home.html', trades=trades, portfolio_value=portfolio_value, holdings=holdings, theme=theme)
     else:
-        return render_template('index.html')
+        return render_template('index.html') 
 
 
 # Login / Register / Logout
+# Register a new account
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    confirmation = False
+    confirmation = False  # Default to False
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -119,76 +119,95 @@ def register():
         date_of_birth = request.form.get('dob')
         phone_number = request.form.get('phone')
 
-        user = users_collection.find_one({"email": email})
+        # Check if the user already exists
+        user = User.query.filter_by(email=email).first()
         if user:
             flash('Email address already exists', 'error')
             return redirect(url_for('register'))
 
+        # Hash the password
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
+        # Create new user
         confirmation_number = generate_confirmation_number()
-        new_user = {
-            "email": email,
-            "password": hashed_password.decode('utf-8'),
-            "first_name": first_name,
-            "last_name": last_name,
-            "date_of_birth": datetime.strptime(date_of_birth, '%Y-%m-%d').date() if date_of_birth else None,
-            "phone_number": phone_number,
-            "portfolio_value": 0.0,
-            "portfolio_locked": False,
-            "confirmation_number": confirmation_number,
-            "email_confirmed": False
-        }
-        users_collection.insert_one(new_user)
+        new_user = User(
+            email=email,
+            password=hashed_password.decode('utf-8'),
+            first_name=first_name,
+            last_name=last_name,
+            date_of_birth=datetime.strptime(date_of_birth, '%Y-%m-%d').date() if date_of_birth else None,
+            phone_number=phone_number,
+            email_confirmed=False,
+            confirmation_number=confirmation_number  
+        )
+        db.session.add(new_user)
+        db.session.commit()
 
+        # Send confirmation email
         msg = EmailMessage(
             "Confirm Your Email for Axiom Stock Picks",
             f"""
             Hi there,
 
-            Welcome to **Axiom Stock Picks**! 
-            Your confirmation code: {confirmation_number}
+            Welcome to **Axiom Stock Picks**, where we bring you elite stock picks and market insights!
+
+            To complete your registration, please confirm your email by entering the following confirmation code on the website:
+
+            **Your Confirmation Code:** {confirmation_number}
+
+            Thank you for joining us! If you have any questions or need assistance, feel free to reach out to our support team.
+
+            Looking forward to helping you make informed investment decisions!
+
+            Best regards,
+            The Axiom Stock Picks Team
+            
+            [Support Contact Info]
             """,
             app.config['MAIL_USERNAME'],
             [email]
         )
         msg.send()
 
-        flash('A confirmation email has been sent.', 'info')
-        confirmation = True
+        flash('A confirmation email has been sent to your email address. Please confirm to complete the registration.', 'info')
+        confirmation = True  
 
     return render_template('register.html', confirmation=confirmation)
 
-# Confirm Email ---------------------------------------------------------------------------------------------------------------------------------
+
 @app.route('/confirm', methods=['POST'])
 def confirm():
     confirmation_number = request.form.get('confirmation_number')
-    user = users_collection.find_one({"confirmation_number": confirmation_number})
+    user = User.query.filter_by(confirmation_number=confirmation_number).first()
+    
+    print("Confirmation number", confirmation_number)
 
     if user:
-        users_collection.update_one({"_id": user["_id"]}, {"$set": {"email_confirmed": True}})
-        flash('Email confirmed successfully.', 'success')
+        user.email_confirmed = True
+        db.session.commit()
+        flash('Email confirmed successfully. You can now log in.', 'success')
         return redirect(url_for('login'))
     else:
-        flash('Invalid confirmation number.', 'error')
+        flash('Invalid confirmation number. Please try again.', 'error')
         return redirect(url_for('register'))
     
-# Login ---------------------------------------------------------------------------------------------------------------------------------
+# Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        user = users_collection.find_one({"email": email})
-        if not user or not bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+        user = User.query.filter_by(email=email).first()
+        if not user or not bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
             flash('Invalid email or password', 'error')
             return redirect(url_for('login'))
 
-        login_user(User(user))
-        return redirect(url_for('home'))
+        login_user(user)
+        return redirect(url_for('home')) 
     return render_template('login.html')
 
-# Logout ---------------------------------------------------------------------------------------------------------------------------------
+
+# Logout
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required
 def logout():
@@ -203,37 +222,41 @@ def generate_confirmation_number():
 @app.route('/home')
 @login_required
 def home():
-    trades = list(trades_collection.find({"user_id": current_user.id}))
+    trades = Trade.query.filter_by(user_id=current_user.id).all()
+
+    # Your existing logic for calculating holdings and portfolio value
     holdings = calculate_current_holdings(current_user.id)
     portfolio_value = current_user.portfolio_value
+
     return render_template('paper_trade.html', trades=trades, portfolio_value=portfolio_value, holdings=holdings)
 
 
-# Calculate Holdings ---------------------------------------------------------------------------------------------------------------------------------
 def calculate_current_holdings(user_id):
-    trades = list(trades_collection.find({"user_id": user_id}))
+    trades = Trade.query.filter_by(user_id=user_id).all()
     holdings = {}
 
     for trade in trades:
-        if trade['action'] == 'BUY':
-            if trade['ticker'] in holdings:
-                holdings[trade['ticker']]['quantity'] += trade['quantity']
-                holdings[trade['ticker']]['total_cost'] += trade['total_value']
+        if trade.action == 'BUY':
+            if trade.ticker in holdings:
+                holdings[trade.ticker]['quantity'] += trade.quantity
+                holdings[trade.ticker]['total_cost'] += trade.total_value
             else:
-                holdings[trade['ticker']] = {
-                    'quantity': trade['quantity'],
-                    'total_cost': trade['total_value']
+                holdings[trade.ticker] = {
+                    'quantity': trade.quantity,
+                    'total_cost': trade.total_value
                 }
-        elif trade['action'] == 'SELL':
-            if trade['ticker'] in holdings:
-                holdings[trade['ticker']]['quantity'] -= trade['quantity']
-                holdings[trade['ticker']]['total_cost'] -= trade['total_value']
-                if holdings[trade['ticker']]['quantity'] <= 0:
-                    del holdings[trade['ticker']]
+        elif trade.action == 'SELL':
+            if trade.ticker in holdings:
+                holdings[trade.ticker]['quantity'] -= trade.quantity
+                holdings[trade.ticker]['total_cost'] -= trade.total_value
+                if holdings[trade.ticker]['quantity'] <= 0:
+                    del holdings[trade.ticker]
 
     result = []
     for ticker, data in holdings.items():
         average_price = data['total_cost'] / data['quantity'] if data['quantity'] > 0 else 0
+
+        # Get the current price of the stock
         try:
             stock = yf.Ticker(ticker)
             stock_info = stock.info
@@ -250,7 +273,6 @@ def calculate_current_holdings(user_id):
 
     return result
 
-# Trade ---------------------------------------------------------------------------------------------------------------------------------
 @app.route('/trade', methods=['POST'])
 @login_required
 def trade():
@@ -263,7 +285,7 @@ def trade():
         stock_info = stock.info
         price = stock_info['currentPrice']
     except KeyError:
-        flash('Error: Unable to retrieve the current stock price.', 'error')
+        flash('Error: Unable to retrieve the current stock price. Please check the ticker symbol and try again.', 'error')
         return redirect(url_for('home'))
     except Exception as e:
         flash(f'Error: {str(e)}', 'error')
@@ -272,75 +294,98 @@ def trade():
     rounded_price = round(price, 2)
     total_value = round(rounded_price * quantity, 2)
 
-    user = users_collection.find_one({"_id": ObjectId(current_user.id)})
-
     if action == 'BUY':
-        if user['portfolio_value'] < total_value:
-            flash('Error: Insufficient portfolio value.', 'error')
+        if current_user.portfolio_value < total_value:
+            flash('Error: Insufficient portfolio value to execute this trade.', 'error')
             return redirect(url_for('home'))
-
-        users_collection.update_one({"_id": ObjectId(current_user.id)}, {"$inc": {"portfolio_value": -total_value}})
+        
+        current_user.portfolio_value -= total_value
 
     elif action == 'SELL':
         current_balance = calculate_stock_balance(current_user.id, ticker)
         if quantity > current_balance:
-            flash(f'Error: Cannot sell more stocks than you own. Balance: {current_balance}', 'error')
+            flash(f'Error: Cannot sell more stocks than you own. Current stock balance for {ticker}: {current_balance} stocks', 'error')
             return redirect(url_for('home'))
+        
+        current_user.portfolio_value += total_value
 
-        users_collection.update_one({"_id": ObjectId(current_user.id)}, {"$inc": {"portfolio_value": total_value}})
+    new_trade = Trade(user_id=current_user.id, ticker=ticker, action=action, price=rounded_price, quantity=quantity, total_value=total_value)
+    db.session.add(new_trade)
 
-    new_trade = {
-        "user_id": current_user.id,
-        "ticker": ticker,
-        "action": action,
-        "price": rounded_price,
-        "quantity": quantity,
-        "total_value": total_value,
-        "date": datetime.now(pytz.timezone('US/Eastern')).replace(microsecond=0)
-    }
-    trades_collection.insert_one(new_trade)
+    db.session.merge(current_user)
+    db.session.commit()
+
+    updated_user = User.query.get(current_user.id)
+    print(f"Database Portfolio Value after {action}: {updated_user.portfolio_value}")
 
     updated_balance = calculate_stock_balance(current_user.id, ticker)
-    flash(f'{action} executed for {quantity} stocks of {ticker} at ${rounded_price}. Remaining stocks: {updated_balance}', 'success')
+    flash(f'{action} executed for {quantity} stocks of {ticker} at ${rounded_price:.2f} each. Total value: ${total_value:.2f}. Remaining stocks of {ticker}: {updated_balance}', 'success')
 
     return redirect(url_for('home'))
 
-# Update Portfolio -------------------------------------------------------------------------------------------------------------------------------
-@app.route('/update_portfolio', methods=['POST'])
+
+@app.route('/update_portfolio', methods=['POST', 'GET'])
 @login_required
 def update_portfolio():
-    portfolio_value = request.form.get('portfolio_value', type=float)
-
-    if portfolio_value is None or portfolio_value < 0:
-        flash('Invalid portfolio value. Please enter a valid number.', 'error')
+    if current_user.portfolio_locked:
+        flash('Portfolio is locked. Please reset it to make changes.', 'error')
         return redirect(url_for('home'))
 
-    # Update the user's portfolio value and lock the portfolio
-    users_collection.update_one(
-        {"_id": ObjectId(current_user.id)},
-        {"$set": {"portfolio_value": portfolio_value, "portfolio_locked": True}}
-    )
+    Trade.query.filter_by(user_id=current_user.id).delete()
+    db.session.commit()
 
-    flash(f'Portfolio value updated to ${portfolio_value:.2f} and locked.', 'success')
+    portfolio_value = request.form.get('portfolio_value', type=float)
+    print("Portfolio Value =", portfolio_value)
+
+    if portfolio_value is None:
+        flash('Invalid portfolio value.', 'error')
+        return redirect(url_for('home'))
+
+    current_user.portfolio_value = portfolio_value
+    current_user.portfolio_locked = True
+    db.session.commit()
+
+    updated_user = User.query.get(current_user.id)
+    print(f"Updated Portfolio Value: {updated_user.portfolio_value}")
+    print(f"Portfolio Locked: {updated_user.portfolio_locked}")
+
+    PV = updated_user.portfolio_value
+    print('PV=', PV)
+
+    flash('Portfolio updated and trade history cleared.', 'success')
     return redirect(url_for('home'))
 
-# Reset Portfolio ---------------------------------------------------------------------------------------------------------------------------------
+
 @app.route('/reset_portfolio', methods=['POST'])
 @login_required
 def reset_portfolio():
-    users_collection.update_one({"_id": ObjectId(current_user.id)}, {"$set": {"portfolio_value": 0.0, "portfolio_locked": False}})
-    trades_collection.delete_many({"user_id": current_user.id})
+    # Clear the user's portfolio value and unlock it
+    user = User.query.get(current_user.id)
+    user.portfolio_value = 0.0
+    user.portfolio_locked = False
+    db.session.commit()
+
+    # Clear trade history
+    Trade.query.filter_by(user_id=current_user.id).delete()
+    db.session.commit()
+
+    # Debugging
+    updated_user = User.query.get(current_user.id)
+    print(f"Reset Portfolio Value: {updated_user.portfolio_value}")
+    print(f"Portfolio Locked: {updated_user.portfolio_locked}")
+
     flash('Portfolio reset and trade history cleared.', 'success')
     return redirect(url_for('home'))
 
+
 def calculate_stock_balance(user_id, ticker):
-    trades = list(trades_collection.find({"user_id": user_id, "ticker": ticker}))
+    trades = Trade.query.filter_by(user_id=user_id, ticker=ticker).all()
     balance = 0
     for trade in trades:
-        if trade['action'] == 'BUY':
-            balance += trade['quantity']
-        elif trade['action'] == 'SELL':
-            balance -= trade['quantity']
+        if trade.action == 'BUY':
+            balance += trade.quantity
+        elif trade.action == 'SELL':
+            balance -= trade.quantity
     return balance
 
 # Basic Pages ---------------------------------------------------------------------------------------------------------------
@@ -464,4 +509,6 @@ def run_python():
 
 # Run
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)    

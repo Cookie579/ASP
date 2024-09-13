@@ -4,7 +4,7 @@
 <head>
 
     {% include 'components/google_analytics.html'%}
-    
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" id="theme-stylesheet" />
@@ -824,9 +824,9 @@
                     <label for="portfolio_value">Set Initial Portfolio Value:</label>
                     <input type="number" id="portfolio_value" name="portfolio_value" step="0.01" min="0" value="{{ "
                         {:.2f}".format(portfolio_value) }}" {{ 'disabled' if current_user.portfolio_locked }}>
-                    <button type="submit" {{ 'disabled' if current_user.portfolio_locked }}>Update
-                        Portfolio</button>
+                    <button type="submit" {{ 'disabled' if current_user.portfolio_locked }}>Update Portfolio</button>
                 </form>
+
 
                 <p>Current Portfolio Value: ${{ "{:.2f}".format(portfolio_value) }}</p>
             </div>
