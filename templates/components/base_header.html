@@ -1,5 +1,4 @@
 <style>
-
     /* Dropdown content styles */
     .dropdown-content {
         display: none;
@@ -109,8 +108,8 @@
 
             <div class="dropdown-content">
                 {% if current_user.is_authenticated %}
+                <a href="/settings"><strong>Settings</strong></a>
                 <a href="/logout"><strong>Logout</strong></a>
-                <!-- <a><strong>Settings</strong></a> -->
 
                 {% else %}
                 <a href="/login"><strong>Login</strong></a>

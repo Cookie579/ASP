@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+
+  {% include 'components/google_analytics.html'%}
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" id="theme-stylesheet" />
+
+  <link rel="shortcut icon" href="#" />
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <title>Axiom Stock Picks - Settings</title>
+  <style>
+    #header {
+      padding: 2.1em 0 1em 0 !important;
+    }
+
+    body {
+      background-color: #000000;
+      color: white;
+      margin: 0;
+    }
+
+    main {
+      margin: 0 !important;
+    }
+
+    /* Sidebar Styles */
+    #sidebar {
+      width: 250px;
+      background-color: #000000;
+      height: 100vh;
+      padding-top: 20px;
+      color: white;
+      float: left;
+      margin-right: 20px;
+    }
+
+    #sidebar a {
+      padding: 15px 20px;
+      text-decoration: none;
+      color: white;
+      display: block;
+    }
+
+    #sidebar a:hover {
+      background-color: #333;
+    }
+
+    /* Main Content Area */
+    #main {
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* Content Section next to Sidebar */
+    .content-section {
+      float: left;
+      width: calc(100% - 270px); 
+    }
+
+    .header {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .flash-container {
+      padding: 35px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .flash.success {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .flash.error {
+      background-color: #f44336;
+      color: white;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    #wrapper {
+      min-height: 0px !important;
+    }
+
+    header.main> :last-child {
+      margin: 0 0 0.25em 0 !important;
+    }
+
+    .spacing {
+      margin-top: 1.5em;
+    }
+
+    .settings-section {
+      margin-bottom: 30px;
+      background-color: #000000;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .settings-section h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #58a6ff;
+    }
+
+    .settings-section button {
+      background-color: #238636;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .settings-section button:hover {
+      background-color: #2ea043;
+    }
+  </style>
+
+</head>
+
+<body class="is-preload">
+
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Main Content -->
+    <div id="main">
+      <div class="inner">
+        {% include 'components/base_header.html'%}
+
+        <!-- Sidebar Inside Main -->
+        <div id="sidebar">
+          <a href="#">Account</a>
+          <a href="#">Appearance</a>
+          <a href="#">Notifications</a>
+          <a href="#">Security</a>
+        </div>
+
+        <!-- Settings Content Next to Sidebar -->
+        <div class="content-section">
+          <div class="spacing">
+            <header class="main">
+              <h1>Settings</h1>
+            </header>
+
+            <!-- Settings Container -->
+            <div class="settings-section">
+              <h2>Change Username</h2>
+              <p>Changing your username can have unintended side effects.</p>
+              <button>Change Username</button>
+            </div>
+
+            <div class="settings-section">
+              <h2>Link Patreon Account</h2>
+              <p>Connect a Patreon account for additional benefits and support.</p>
+              <button>Connect with Patreon</button>
+            </div>
+
+            <div class="settings-section">
+              <h2>Export Account Data</h2>
+              <p>Export your account data for backup or review purposes.</p>
+              <button>Start Export</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+  <div class="flash-container">
+    {% for category, message in messages %}
+    <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
+</body>
+
+</html>

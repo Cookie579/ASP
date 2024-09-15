@@ -61,7 +61,6 @@ def load_recent_changes():
 
 # Sidebar Recent Changes
 def get_recent_changes():
-    # Construct the path to the JSON file in the static folder
     json_path = os.path.join(os.getcwd(), 'static', 'json', 'recent_changes.json')
     
     # Load the JSON data from the file
@@ -367,6 +366,10 @@ def b_and_b():
 @app.route('/QTI')
 def QTI():
     return render_template('QTI.html')
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
 
 @app.route('/portfolio-updates')
 def portfolio_updates():
