@@ -1,9 +1,10 @@
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
 
     {% include 'components/google_analytics.html'%}
-    
+
     <title>Axiom Stock Picks - Login</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,45 +13,44 @@
     <link rel="shortcut icon" href="#">
 
     <style>
-        
         /* Update Header Styling*/
         #header {
             padding: 2.1em 0 1em 0 !important;
         }
-  
+
         /* Split screen styling */
         .split-screen {
             display: flex;
-            margin-top: 40px; /* Space between the top bar and form */
+            margin-top: 40px;
             max-width: 1000px;
-            margin: 40px auto; /* Centering the form */
-            border-radius: 10px; /* Rounded corners */
+            margin: 40px auto;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Darker shadow */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .left {
             flex: 1;
-            background-color: #000000; /* Pure black */
-            color: #ffffff; /* White text */
+            background-color: #000000;
+            color: #ffffff;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Center vertically */
-            align-items: center; /* Center horizontally */
-            text-align: center; /* Center text alignment */
+            justify-content: center;
+            align-items: center;
+            text-align: center;
             padding: 20px;
-            min-height: 400px; /* Ensure there's enough height for vertical centering */
+            min-height: 400px;
         }
 
         .left h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            color: #0501fc; /* Dark blue */
+            color: #0501fc;
         }
 
         .left p {
             font-size: 1.5em;
-            color: #d1e7ff; /* Light blue text */
+            color: #d1e7ff;
         }
 
         .right {
@@ -59,20 +59,20 @@
             justify-content: center;
             align-items: center;
             padding: 40px;
-            background-color: #ffffff; /* White background */
+            background-color: #ffffff;
         }
 
         .registration-form {
             width: 100%;
             max-width: 400px;
             padding: 30px;
-            background: #f4f4f4; /* Light gray background */
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Soft shadow */
+            background: #f4f4f4;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             display: flex;
-            flex-direction: column; /* Align items in a column */
-            justify-content: space-between; /* Space between items */
-            height: 100%; /* Make sure the form takes full height */
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
 
         .registration-form .form-group {
@@ -83,45 +83,45 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: #333; /* Dark text */
+            color: #333;
         }
 
         .registration-form input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 3px; /* Rounded corners */
+            border-radius: 3px;
             font-size: 14px;
-            background: #ffffff; /* White input background */
-            color: #333; /* Dark text */
+            background: #ffffff;
+            color: #333;
         }
 
         .registration-form input::placeholder {
-            color: #888; /* Light gray placeholder */
+            color: #888;
         }
 
         .registration-form button {
             width: 100%;
-            background: #000000; /* Black button */
+            background: #000000;
             border: none;
-            border-radius: 25px; /* Rounded corners */
-            outline: none; /* Remove default focus outline */
-            box-shadow: none; /* Remove box-shadow */
+            border-radius: 25px;
+            outline: none;
+            box-shadow: none;
             color: white !important;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease;
             border-bottom: 0px !important;
             margin-top: 15px;
         }
 
         .registration-form button:focus {
-            outline: none; /* Ensure no outline on focus */
-            box-shadow: none; /* Ensure no box-shadow on focus */
+            outline: none;
+            box-shadow: none;
         }
 
         .registration-form button:hover {
-            background: #0501fc; /* Dark blue on hover */
+            background: #0501fc;
         }
 
         .registration-form .form-link {
@@ -129,14 +129,14 @@
         }
 
         .registration-form .form-link a {
-            color: #000000 !important; /* Dark blue link */
+            color: #000000 !important;
             text-decoration: none !important;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease;
             border-bottom: dotted 1px !important;
         }
 
         .registration-form .form-link a:hover {
-            color: #0501fc !important; /* Dark blue on hover */
+            color: #0501fc !important;
         }
 
         .flash-container {
@@ -162,63 +162,64 @@
     </style>
 
 </head>
+
 <body>
 
-{% with messages = get_flashed_messages(with_categories=True) %}
-{% if messages %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
     <div class="flash-container">
         {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
+        <div class="flash {{ category }}">{{ message }}</div>
         {% endfor %}
     </div>
-{% endif %}
-{% endwith %}
-    
-<!-- Wrapper -->
-<div id="wrapper">
+    {% endif %}
+    {% endwith %}
 
-    <!-- Main -->
-    <div id="main">
-        <div class="inner">
+    <!-- Wrapper -->
+    <div id="wrapper">
 
-            <!-- Header -->
-            <header id="header">
-                <a href="/" class="logo"><strong>Axiom</strong> Stock Picks</a>
-            </header>
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
 
-            <!-- Split Screen Content -->
-            <div class="split-screen">
+                <!-- Header -->
+                <header id="header">
+                    <a href="/" class="logo"><strong>Axiom</strong> Stock Picks</a>
+                </header>
 
-                <!-- Left Side -->
-                <div class="left">
-                    <h1>Welcome Back.</h1>
-                    <p>We missed you!</p>
-                </div>
+                <!-- Split Screen Content -->
+                <div class="split-screen">
 
-                <!-- Right Side -->
-                <div class="right">
-                    <div class="registration-form">
-                        <form action="{{ url_for('login') }}" method="post">
-                            
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" id="password" name="password" required>
-                            </div>
-                            <button type="submit">Login</button>
-                            <div class="form-link">
-                                <a href="/register">I am not a member</a>
-                            </div>
-                        </form>
+                    <!-- Left Side -->
+                    <div class="left">
+                        <h1>Welcome Back.</h1>
+                        <p>We missed you!</p>
+                    </div>
+
+                    <!-- Right Side -->
+                    <div class="right">
+                        <div class="registration-form">
+                            <form action="{{ url_for('login') }}" method="post">
+
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" name="password" required>
+                                </div>
+                                <button type="submit">Login</button>
+                                <div class="form-link">
+                                    <a href="/register">I am not a member</a>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 </body>
+
 </html>

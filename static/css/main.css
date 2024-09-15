@@ -1545,7 +1545,7 @@ body,
 input,
 select,
 textarea {
-    color: #ededed;
+    color: #ffffff;
     background-color: #000000;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     
@@ -1575,7 +1575,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: #e6edf3;
+    color: #ffffff;
 }
 
 blockquote {

@@ -154,7 +154,7 @@ def register():
         )
         msg.send()
 
-        flash('A confirmation email has been sent.', 'info')
+        flash('A confirmation email has been sent.', 'success')
         confirmation = True
 
     return render_template('register.html', confirmation=confirmation)
