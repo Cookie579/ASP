@@ -75,8 +75,11 @@ body {
     min-width: 320px; } }
 
 html {
-  scroll-behavior: smooth !important;
   box-sizing: border-box; }
+
+html {
+   scroll-behavior: auto;
+}
 
 *, *:before, *:after {
   box-sizing: inherit; }
