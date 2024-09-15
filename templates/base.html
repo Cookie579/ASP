@@ -3,53 +3,166 @@
 
 <head>
 
-    {% include 'components/google_analytics.html'%}
+  {% include 'components/google_analytics.html'%}
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" id="theme-stylesheet" />
-    <link rel="shortcut icon" href="#" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" id="theme-stylesheet" />
+  <link rel="shortcut icon" href="#" />
 
-    <title>Axiom Stock Picks</title>
+  <!-- Locomotive Scroll CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+
+  <title>Axiom Stock Picks</title>
+
+  <!-- Custom styles for horizontal menu -->
+  <style>
+    #horizontal-menu {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+      /* Add visibility transition */
+      background-color: #000000;
+      padding: 0;
+      text-align: center;
+      margin-top: 36.665px;
+      margin-bottom: 36.665px;
+    }
+
+    #horizontal-menu ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #horizontal-menu ul li {
+      display: inline;
+      margin: 0 15px;
+    }
+
+    #horizontal-menu ul li a {
+      color: white;
+      text-decoration: none !important;
+      font-size: 1em;
+    }
+
+
+    #horizontal-menu.visible {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.5s ease;
+    }
+
+    #horizontal-menu.hidden {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+    }
+
+    #banner {
+      padding-top: 0px !important;
+    }
+
+    section {
+      padding-top: 0px !important;
+    }
+  </style>
+
 
 </head>
 
 <body class="is-preload">
 
-    <!-- Wrapper -->
-    <div id="wrapper">
+  <!-- Wrapper -->
+  <div id="wrapper">
 
-        <!-- Main -->
-        <div id="main">
-            <div class="inner">
+    <!-- Main -->
+    <div id="main">
+      <div class="inner">
 
-                {% include 'components/base_header.html'%}
+        {% include 'components/base_header.html'%}
 
-                {% block content %}{% endblock %}
-            </div>
-        </div>
+        <!-- Horizontal Menu -->
+        <nav id="horizontal-menu">
+          <ul>
+            <li><a href="/">Homepage</a></li>
+            <li><a href="/stock-viewer">Stock Viewer</a></li>
+            <li><a href="/articles">Articles</a></li>
+            <li><a href="/asp-portfolio">ASP Portfolio</a></li>
+            <li><a href="/home">Training</a></li>
+            <li><a href="/home">Paper Trading</a></li>
+            <li><a href="/QTI">Quick Trade Ideas</a></li>
+          </ul>
+        </nav>
 
-        <!-- Sidebar -->
-        {% include 'components/sidebar.html' %}
-
-
+        {% block content %}{% endblock %}
+      </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/util.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Sidebar -->
+    {% include 'components/sidebar.html' %}
 
-    <!-- Close Sidebar -->
-    <!-- <script>
-        window.addEventListener('load', function() {
-          if (window.location.pathname === '/') {
-            document.getElementById('sidebar').classList.add('inactive');
+  </div>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  <!-- Locomotive Scroll JS -->
+  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+
+  <!-- Initialize Locomotive Scroll -->
+  <script src="{{ url_for('static', filename='js/smooth-scroll.js') }}"></script>
+
+  <!-- Close Sidebar -->
+  <script>
+    window.addEventListener('load', function () {
+      const sidebar = document.getElementById('sidebar');
+      const horizontalMenu = document.getElementById('horizontal-menu');
+
+      if (window.location.pathname === '/') {
+        sidebar.classList.add('inactive');
+      }
+    });
+  </script>
+  <script>
+    window.addEventListener('load', function () {
+      const sidebar = document.getElementById('sidebar');
+      const horizontalMenu = document.getElementById('horizontal-menu');
+      const banner = document.getElementById('banner');
+
+      // Function to toggle the menu based on sidebar class
+      function toggleMenu() {
+        if (sidebar.classList.contains('inactive')) {
+          horizontalMenu.classList.remove('hidden');  // Show the menu with fade
+          horizontalMenu.classList.add('visible');
+          banner.style.paddingTop = '0'; // Reduce padding-top of #banner when menu is shown
+        } else {
+          horizontalMenu.classList.remove('visible');  // Hide the menu with fade
+          horizontalMenu.classList.add('hidden');
+        }
+      }
+
+      // Initial check when the page loads
+      toggleMenu();
+
+      // Set up MutationObserver to detect class changes on the sidebar
+      const observer = new MutationObserver(function (mutationsList) {
+        mutationsList.forEach(function (mutation) {
+          if (mutation.attributeName === 'class') {
+            toggleMenu();
           }
         });
-      </script>       -->
+      });
+
+      // Start observing sidebar for attribute changes (like class changes)
+      observer.observe(sidebar, { attributes: true });
+    });
+  </script>
+
 
 </body>
 

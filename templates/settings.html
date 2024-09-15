@@ -11,12 +11,16 @@
 
   <link rel="shortcut icon" href="#" />
 
+  <!-- Locomotive Scroll CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <title>Axiom Stock Picks - Settings</title>
   <style>
     #header {
       padding: 2.1em 0 1em 0 !important;
+      align-items: center;
     }
 
     body {
@@ -60,7 +64,7 @@
     /* Content Section next to Sidebar */
     .content-section {
       float: left;
-      width: calc(100% - 270px); 
+      width: calc(100% - 270px);
     }
 
     .header {
@@ -188,6 +192,12 @@
   </div>
   {% endif %}
   {% endwith %}
+
+  <!-- Locomotive Scroll JS -->
+  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+
+  <!-- Initialize Locomotive Scroll -->
+  <script src="{{ url_for('static', filename='js/smooth-scroll.js') }}"></script>
 
 </body>
 

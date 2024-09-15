@@ -107,15 +107,11 @@
             </ul>
         </nav>
         <script>
-            // Grab all elements with class "opener"
             const openers = document.querySelectorAll('.opener');
 
-            // Loop through each opener and attach a click event
             openers.forEach(opener => {
                 opener.addEventListener('click', () => {
-                    const dropdown = opener.nextElementSibling;  // Find the corresponding dropdown-content
-
-                    // Toggle dropdown visibility
+                    const dropdown = opener.nextElementSibling; 
                     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
                 });
             });
@@ -140,9 +136,6 @@
 
         <!-- Footer -->
         <footer id="footer">
-            <!-- <p class="copyright">&copy; ASP. All rights reserved. Demo Images: <a
-                    href="https://unsplash.com">Unsplash</a>.</p> -->
-
             <p class="copyright">&copy; ASP. All rights reserved.</p>
         </footer>
     </div>

@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
     <link rel="shortcut icon" href="#" />
 
+    <!-- Locomotive Scroll CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <title>ASP - Paper Trading</title>
@@ -55,6 +58,7 @@
             border: 1px solid #0501fc;
             border-radius: 5px;
             box-sizing: border-box;
+            margin-bottom: 10px;
         }
 
         #trade-quotes-wrapper {
@@ -372,18 +376,13 @@
                 text-indent: -9999px;
                 background-color: transparent;
                 border: 1px solid #ffffff !important;
-                /* Keep the border */
                 appearance: none;
-                /* Remove default arrow */
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 position: relative;
                 display: flex;
-                /* Use flexbox to center the content */
                 align-items: center;
-                /* Vertically center */
                 justify-content: center;
-                /* Horizontally center */
             }
 
             #controls-container .control select::after {
@@ -442,6 +441,8 @@
             </div>
         </div>
     </div>
+
+
 
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}

@@ -12,17 +12,36 @@
     <link rel="stylesheet" href="static/css/main.css" />
     <link rel="shortcut icon" href="#">
 
+
+    <!-- Locomotive Scroll CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+
     <style>
-        /* Update Header Styling */
+        /* Update Header Styling*/
         #header {
+            display: flex !important;
+            align-items: center;
             padding: 2.1em 0 1em 0 !important;
+        }
+
+        #header i {
+            margin-right: 10px;
+        }
+
+        #header a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        #header .logo {
+            color: #ffffff;
         }
 
         /* Split screen styling */
         .split-screen {
             display: flex;
             margin-top: 40px;
-            /* Space between the top bar and form */
             max-width: 1000px;
             margin: 40px auto;
             border-radius: 10px;
@@ -37,21 +56,16 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* Center vertically */
             align-items: center;
-            /* Center horizontally */
             text-align: center;
-            /* Center text alignment */
             padding: 20px;
             min-height: 400px;
-            /* Ensure there's enough height for vertical centering */
         }
 
         .left h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
             color: #0501fc;
-            /* Dark blue */
         }
 
         .left p {
@@ -73,18 +87,12 @@
             max-width: 400px;
             padding: 30px;
             background: #f4f4f4;
-            /* Light gray background */
             border-radius: 10px;
-            /* Rounded corners */
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            /* Soft shadow */
             display: flex;
             flex-direction: column;
-            /* Align items in a column */
             justify-content: space-between;
-            /* Space between items */
             height: 100%;
-            /* Make sure the form takes full height */
         }
 
         .registration-form .form-group {
@@ -104,12 +112,9 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 3px;
-            /* Rounded corners */
             font-size: 14px;
             background: #ffffff;
-            /* White input background */
             color: #333;
-            /* Dark text */
         }
 
         .registration-form input::placeholder {
@@ -239,11 +244,11 @@
 
 {% with messages = get_flashed_messages(with_categories=True) %}
 {% if messages %}
-    <div class="flash-container">
-        {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %}
-    </div>
+<div class="flash-container">
+    {% for category, message in messages %}
+    <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+</div>
 {% endif %}
 {% endwith %}
 
@@ -258,7 +263,10 @@
 
                 <!-- Header -->
                 <header id="header">
-                    <a href="/" class="logo"><strong>Axiom</strong> Stock Picks</a>
+                    <a href="/" class="logo">
+                        <i class="fa fa-angle-double-left"></i>
+                        <strong class="icons">Go Back</strong>
+                    </a>
                 </header>
 
                 <!-- Split Screen Content -->
@@ -310,7 +318,7 @@
         </div>
 
         {% include 'components/confirmation_overlay.html'%}
-        
+
     </div>
 
     <script>
@@ -335,6 +343,13 @@
             }
         };
     </script>
+
+    <!-- Locomotive Scroll JS -->
+    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+
+    <!-- Initialize Locomotive Scroll -->
+    <script src="{{ url_for('static', filename='js/smooth-scroll.js') }}"></script>
+
 </body>
 
 </html>
