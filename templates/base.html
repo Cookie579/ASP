@@ -10,9 +10,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" id="theme-stylesheet" />
   <link rel="shortcut icon" href="#" />
 
-  <!-- Locomotive Scroll CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
-
   <title>Axiom Stock Picks</title>
 
   <!-- Custom styles for horizontal menu -->
@@ -33,6 +30,7 @@
       list-style-type: none;
       padding: 0;
       margin: 0;
+      user-select: none !important;
     }
 
     #horizontal-menu ul li {
@@ -63,7 +61,7 @@
       padding-top: 0px !important;
     }
 
-    section {
+    section:first-of-type {
       padding-top: 0px !important;
     }
   </style>
@@ -111,11 +109,10 @@
   <script src="{{ url_for('static', filename='js/util.js') }}"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-  <!-- Locomotive Scroll JS -->
-  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
 
-  <!-- Initialize Locomotive Scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis"></script>
   <script src="{{ url_for('static', filename='js/smooth-scroll.js') }}"></script>
+  
 
   <!-- Close Sidebar -->
   <script>
@@ -162,7 +159,6 @@
       observer.observe(sidebar, { attributes: true });
     });
   </script>
-
 
 </body>
 
