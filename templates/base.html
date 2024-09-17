@@ -15,33 +15,52 @@
   <!-- Custom styles for horizontal menu -->
   <style>
     #horizontal-menu {
+      font-size: 0;
+      align-items: center;
+      justify-content: center;
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.5s ease, visibility 0s linear 0.5s;
-      /* Add visibility transition */
       background-color: #000000;
       padding: 0;
       text-align: center;
-      margin-top: 36.665px;
-      margin-bottom: 36.665px;
-    }
-
-    #horizontal-menu ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
+      margin-top: 13.339px;
+      margin-bottom: 13.339px;
       user-select: none !important;
     }
 
-    #horizontal-menu ul li {
-      display: inline;
-      margin: 0 15px;
+    /* Initial button styling */
+    #horizontal-menu .menu-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: none !important;
+      border-radius: 2px !important;
+      color: white !important;
+      font-size: 12pt !important;
+      cursor: pointer;
+      text-decoration: none !important;
+      padding: 10px 15px;
+      transition: background-color 0.3s ease;
+      box-shadow: none !important;
     }
 
-    #horizontal-menu ul li a {
-      color: white;
-      text-decoration: none !important;
-      font-size: 1em;
+    /* Hover state background color */
+    #horizontal-menu .menu-button.hovered {
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: background-color 0.3s ease;
+    }
+
+
+    #horizontal-menu .menu-button:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    #horizontal-menu .menu-button:active {
+      outline: none !important;
+      box-shadow: none !important;
     }
 
 
@@ -66,7 +85,6 @@
     }
   </style>
 
-
 </head>
 
 <body class="is-preload">
@@ -82,15 +100,13 @@
 
         <!-- Horizontal Menu -->
         <nav id="horizontal-menu">
-          <ul>
-            <li><a href="/">Homepage</a></li>
-            <li><a href="/stock-viewer">Stock Viewer</a></li>
-            <li><a href="/articles">Articles</a></li>
-            <li><a href="/asp-portfolio">ASP Portfolio</a></li>
-            <li><a href="/home">Training</a></li>
-            <li><a href="/home">Paper Trading</a></li>
-            <li><a href="/QTI">Quick Trade Ideas</a></li>
-          </ul>
+          <button class="menu-button" onclick="location.href='/'">Homepage</button>
+          <button class="menu-button" onclick="location.href='/stock-viewer'">Stock Viewer</button>
+          <button class="menu-button" onclick="location.href='/articles'">Articles</button>
+          <button class="menu-button" onclick="location.href='/asp-portfolio'">ASP Portfolio</button>
+          <button class="menu-button" onclick="location.href='/home'">Training</button>
+          <button class="menu-button" onclick="location.href='/home'">Paper Trading</button>
+          <button class="menu-button" onclick="location.href='/QTI'">Quick Trade Ideas</button>
         </nav>
 
         {% block content %}{% endblock %}
@@ -109,10 +125,9 @@
   <script src="{{ url_for('static', filename='js/util.js') }}"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis"></script>
   <script src="{{ url_for('static', filename='js/smooth-scroll.js') }}"></script>
-  
+
 
   <!-- Close Sidebar -->
   <script>
@@ -120,11 +135,14 @@
       const sidebar = document.getElementById('sidebar');
       const horizontalMenu = document.getElementById('horizontal-menu');
 
-      if (window.location.pathname === '/') {
-        sidebar.classList.add('inactive');
-      }
+      // if (window.location.pathname === '/') {
+      //   sidebar.classList.add('inactive');
+      // }
+
+      sidebar.classList.add('inactive')
     });
   </script>
+
   <script>
     window.addEventListener('load', function () {
       const sidebar = document.getElementById('sidebar');
@@ -158,6 +176,53 @@
       // Start observing sidebar for attribute changes (like class changes)
       observer.observe(sidebar, { attributes: true });
     });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const buttons = document.querySelectorAll('#horizontal-menu .menu-button');
+      let lastHoveredIndex = null; // Track the last hovered button index
+
+      buttons.forEach((button, index) => {
+        button.addEventListener('mouseenter', () => {
+          if (lastHoveredIndex !== null && lastHoveredIndex !== index) {
+            const start = Math.min(lastHoveredIndex, index);
+            const end = Math.max(lastHoveredIndex, index);
+
+            // Apply hover effect to all buttons between the last hovered and current
+            for (let i = start; i <= end; i++) {
+              const delay = Math.abs(i - lastHoveredIndex) * 50; // Delay based on distance
+              setTimeout(() => {
+                buttons[i].classList.add('hovered');
+              }, delay);
+            }
+          } else {
+            button.classList.add('hovered');
+          }
+
+          lastHoveredIndex = index; // Update the last hovered index
+        });
+
+        // Reset the hover effect when leaving a button
+        button.addEventListener('mouseleave', () => {
+          lastHoveredIndex = null; // Reset the last hovered index to prevent stale effects
+
+          // Remove the hover class from the current button after a short delay
+          setTimeout(() => {
+            button.classList.remove('hovered');
+          }, 200);
+        });
+      });
+
+      // Ensure hover is removed when the mouse leaves the entire menu
+      const menu = document.getElementById('horizontal-menu');
+      menu.addEventListener('mouseleave', () => {
+        buttons.forEach(button => button.classList.remove('hovered'));
+      });
+    });
+
+
+
   </script>
 
 </body>

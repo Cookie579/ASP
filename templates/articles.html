@@ -5,23 +5,27 @@
 </script>
 
 <style>
-	    .posts article {
-        min-height: 450px; /* Ensure all articles have the same height */
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+	.posts article {
+		min-height: 450px;
+		/* Ensure all articles have the same height */
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
 
-    .posts article .actions {
-        margin-top: auto; /* Align buttons at the bottom */
-        text-align: center; /* Optional: Center buttons horizontally */
-    }
-    
-    @media screen and (max-width: 768px) {
-        .posts article {
-            min-height: 350px; /* Adjust height for smaller screens */
-        }
-    }
+	.posts article .actions {
+		margin-top: auto;
+		/* Align buttons at the bottom */
+		text-align: center;
+		/* Optional: Center buttons horizontally */
+	}
+
+	@media screen and (max-width: 768px) {
+		.posts article {
+			min-height: 350px;
+			/* Adjust height for smaller screens */
+		}
+	}
 </style>
 
 <!-- Content -->
@@ -31,13 +35,6 @@
 	</header>
 
 	<p>
-		Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in
-		faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis.
-		Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque
-		leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu
-		massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac,
-		pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at,
-		elementum convallis elit. Pellentesque enim turpis, hendrerit.
 	</p>
 	<section>
 		<header class="major">
@@ -45,6 +42,20 @@
 		</header>
 
 		<div class="posts">
+			<article>
+				<a href="/danaher-dhr" class="image"><img src="{{ url_for('static', filename='images/dhr-sidebar.jpg') }}"
+						alt="" /></a>
+				<h3>Danaher (DHR) Investment Idea</h3>
+				<p class="front-page-p">
+					Danaher Corporation is a global life sciences and diagnostics innovator. The Company operates
+					through three business segments: Biotechnology, Life Sciences and Diagnostics. The Biotechnology
+					segment includes the bioprocessing and discovery and medical businesses and offers a broad range
+					of equipment...
+				</p>
+				<ul class="actions">
+					<li><a href="/asp-portfolio" class="button">More</a></li>
+				</ul>
+			</article>
 			<article>
 				<a href="/b-and-b-bro" class="image"><img src="{{ url_for('static', filename='images/b-and-b-sidebar.jpg') }}"
 						alt="" /></a>
@@ -72,19 +83,6 @@
 					<li><a href="/palo-alto-panw" class="button">More</a></li>
 				</ul>
 			</article>
-			<article>
-				<a href="/asp-portfolio" class="image"><img src="static/images/asp-portfolio.jpg" alt="" /></a>
-				<h3>The ASP Portfolio</h3>
-				<p class="front-page-p">
-					Here you can find a detailed view of the current portfolio, including targets, stop loss,
-					and other key data for each stock. You can explore the full portfolio as well as quick trade
-					idea performance, which are higher-risk picks without detailed articles. This page gives you a
-					look at both the long-term and shorter-term trading opportunities.
-				</p>
-				<ul class="actions">
-					<li><a href="/asp-portfolio" class="button">More</a></li>
-				</ul>
-			</article> 
 			<!-- <article>
 				<a href="#" class="image"><img src="static/images/asp-wall-street.jpg" alt="" /></a>
 				<h3>Training</h3>
@@ -124,7 +122,7 @@
 					<li><a href="/QTI" class="button">More</a></li>
 				</ul>
 			</article>
-		</div> --> 
+		</div> -->
 	</section>
 
 </section>

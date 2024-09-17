@@ -26,6 +26,7 @@
         color: #fff !important;
     }
 </style>
+
 <div id="sidebar">
     <div class="inner">
         <!-- Menu -->
@@ -39,6 +40,7 @@
                 <li>
                     <span class="opener">Articles</span>
                     <ul>
+                        <li><a href="/danaher-dhr">Danaher (DHR) Investment Idea</a></li>
                         <li><a href="/b-and-b-bro">Brown and Brown Inc (BRO) Investment Idea</a></li>
                         <li><a href="/palo-alto-panw">Palo Alto (PANW) Investment Idea</a></li>
                         <li><a href="/articles">All Articles...</a></li>
@@ -62,6 +64,14 @@
                 <h2>Recent Articles</h2>
             </header>
             <div class="mini-posts">
+                <article>
+                    <a href="/danaher-dhr" class="image"><img
+                            src="{{ url_for('static', filename='images/dhr-sidebar.jpg') }}" alt="" /></a>
+                    <p>Danaher Corporation is a global life sciences and diagnostics innovator. The Company operates
+                        through three business segments: Biotechnology, Life Sciences and Diagnostics. The Biotechnology
+                        segment includes the bioprocessing and discovery and medical businesses and offers a broad range
+                        of equipment...</p>
+                </article>
                 <article>
                     <a href="/b-and-b-bro" class="image"><img
                             src="{{ url_for('static', filename='images/b-and-b-sidebar.jpg') }}" alt="" /></a>
@@ -90,18 +100,18 @@
             </header>
             <ul>
                 {% if g.recent_changes %}
-                    {% for change in g.recent_changes %}
-                    <li>
-                        <span class="opener">{{ change.date }}</span>
-                        <ul>
-                            {% for detail in change.changes %}
-                            <li><a>{{ detail }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endfor %}
+                {% for change in g.recent_changes[:5] %}
+                <li>
+                    <span class="opener">{{ change.date }}</span>
+                    <ul>
+                        {% for detail in change.changes %}
+                        <li><a>{{ detail }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
                 {% else %}
-                    <li>No recent changes available.</li>
+                <li>No recent changes available.</li>
                 {% endif %}
                 <li><a href="/portfolio-updates">More...</a></li>
             </ul>
@@ -111,7 +121,7 @@
 
             openers.forEach(opener => {
                 opener.addEventListener('click', () => {
-                    const dropdown = opener.nextElementSibling; 
+                    const dropdown = opener.nextElementSibling;
                     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
                 });
             });

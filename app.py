@@ -68,7 +68,7 @@ def get_recent_changes():
         data = json.load(file)
         
     # Return only the 5 most recent changes
-    return data[:5]
+    return data
 
 # SQL Management
 # MongoDB User Model
@@ -362,6 +362,10 @@ def palo_alto():
 @app.route('/b-and-b-bro')
 def b_and_b():
     return render_template('brown_and_brown_BRO.html')
+
+@app.route('/danaher-dhr')
+def danaher():
+    return render_template('danaher_DHR.html')
 
 @app.route('/QTI')
 def QTI():
