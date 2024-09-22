@@ -1300,8 +1300,8 @@ input[type="radio"] + label:before {
     color: inherit;
     font-family: "Roboto Slab", serif;
     font-size: 1.125em;
-    width: 250px;
-  min-width: 250px;}
+    width: 175px;
+  min-width: 175px;}
   #header .icons {
     text-align: right; 
     max-width: 400px;

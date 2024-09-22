@@ -1,7 +1,7 @@
 <!-- Easy -->
 Add Pin System to Stock - Viewer Dropdown
 Add Better Search and Add Option to Type in OWN Ticker
-Add Colourful highlights and fix login / register CSS
+Add Colourful highlights to login / register CSS
 
 <!-- Time Intensive -->
 Write more articles! Beef up the website with content
@@ -14,4 +14,3 @@ Include portfolio history and fix css styling
 Streamline and compartmentalize app.py 
 Move Everything to main.css
 Add LIGHT MODE!
-Fix Sidebar Three Dashes obstructing content when @media width hides sidebar

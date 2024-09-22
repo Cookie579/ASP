@@ -12,7 +12,6 @@
 
   <title>Axiom Stock Picks</title>
 
-  <!-- Custom styles for horizontal menu -->
   <style>
     #horizontal-menu {
       font-size: 0;
@@ -29,7 +28,6 @@
       user-select: none !important;
     }
 
-    /* Initial button styling */
     #horizontal-menu .menu-button {
       display: inline-flex;
       align-items: center;
@@ -38,7 +36,8 @@
       border: none !important;
       border-radius: 2px !important;
       color: white !important;
-      font-size: 12pt !important;
+      font-size: clamp(8.5pt, 1.27vw, 12pt);
+      /* Minimum 9pt, maximum 12pt */
       cursor: pointer;
       text-decoration: none !important;
       padding: 10px 15px;
@@ -46,7 +45,6 @@
       box-shadow: none !important;
     }
 
-    /* Hover state background color */
     #horizontal-menu .menu-button.hovered {
       background-color: rgba(255, 255, 255, 0.1);
       transition: background-color 0.3s ease;
@@ -103,10 +101,10 @@
           <button class="menu-button" onclick="location.href='/'">Homepage</button>
           <button class="menu-button" onclick="location.href='/stock-viewer'">Stock Viewer</button>
           <button class="menu-button" onclick="location.href='/articles'">Articles</button>
-          <button class="menu-button" onclick="location.href='/asp-portfolio'">ASP Portfolio</button>
-          <button class="menu-button" onclick="location.href='/home'">Training</button>
+          <button class="menu-button" id="ASP" onclick="location.href='/asp-portfolio'">ASP Portfolio</button>
+          <!-- <button class="menu-button" onclick="location.href='#'">Training</button> -->
           <button class="menu-button" onclick="location.href='/home'">Paper Trading</button>
-          <button class="menu-button" onclick="location.href='/QTI'">Quick Trade Ideas</button>
+          <button class="menu-button" id="QTI" onclick="location.href='/QTI'">Quick Trade Ideas</button>
         </nav>
 
         {% block content %}{% endblock %}
@@ -135,11 +133,6 @@
       const sidebar = document.getElementById('sidebar');
       const horizontalMenu = document.getElementById('horizontal-menu');
 
-      // if (window.location.pathname === '/') {
-      //   sidebar.classList.add('inactive');
-      // }
-
-      sidebar.classList.add('inactive')
     });
   </script>
 
@@ -152,11 +145,11 @@
       // Function to toggle the menu based on sidebar class
       function toggleMenu() {
         if (sidebar.classList.contains('inactive')) {
-          horizontalMenu.classList.remove('hidden');  // Show the menu with fade
+          horizontalMenu.classList.remove('hidden');
           horizontalMenu.classList.add('visible');
-          banner.style.paddingTop = '0'; // Reduce padding-top of #banner when menu is shown
+          banner.style.paddingTop = '0';
         } else {
-          horizontalMenu.classList.remove('visible');  // Hide the menu with fade
+          horizontalMenu.classList.remove('visible');
           horizontalMenu.classList.add('hidden');
         }
       }
@@ -220,6 +213,24 @@
         buttons.forEach(button => button.classList.remove('hovered'));
       });
     });
+
+    window.addEventListener('resize', updateMenuText);
+    window.addEventListener('load', updateMenuText);
+
+    function updateMenuText() {
+      const quickTradeButton = document.getElementById('QTI');
+      const aspPortfolioButton = document.getElementById('ASP');
+      const screenWidth = window.innerWidth;
+
+      if (screenWidth <= 860) {
+        quickTradeButton.textContent = 'QTI';
+        aspPortfolioButton.textContent = 'Portfolio';
+      } else {
+        quickTradeButton.textContent = 'Quick Trade Ideas';
+        aspPortfolioButton.textContent = 'ASP Portfolio';
+      }
+    }
+
 
 
 
