@@ -31,7 +31,7 @@
     }
 
     /* Sidebar Styles */
-    #sidebar {
+    #settings-sidebar {
       width: 250px;
       background-color: #000000;
       height: 100vh;
@@ -41,14 +41,14 @@
       margin-right: 20px;
     }
 
-    #sidebar a {
+    #settings-sidebar a {
       padding: 15px 20px;
       text-decoration: none;
       color: white;
       display: block;
     }
 
-    #sidebar a:hover {
+    #settings-sidebar a:hover {
       background-color: #333;
     }
 
@@ -142,11 +142,11 @@
         {% include 'components/base_header.html'%}
 
         <!-- Sidebar Inside Main -->
-        <div id="sidebar">
-          <a href="#">Account</a>
-          <a href="#">Appearance</a>
-          <a href="#">Notifications</a>
-          <a href="#">Security</a>
+        <div id="settings-sidebar">
+          <a href="#" data-section="account-section">Account</a>
+          <a href="#" data-section="appearance-section">Appearance</a>
+          <a href="#" data-section="notifications-section">Notifications</a>
+          <a href="#" data-section="security-section">Security</a>
         </div>
 
         <!-- Settings Content Next to Sidebar -->
@@ -156,23 +156,33 @@
               <h1>Settings</h1>
             </header>
 
-            <!-- Settings Container -->
-            <div class="settings-section">
+            <!-- Account Settings Section -->
+            <div class="settings-section" id="account-section">
               <h2>Change Username</h2>
               <p>Changing your username can have unintended side effects.</p>
               <button>Change Username</button>
             </div>
 
-            <div class="settings-section">
-              <h2>Link Patreon Account</h2>
-              <p>Connect a Patreon account for additional benefits and support.</p>
-              <button>Connect with Patreon</button>
+            <!-- Appearance Settings Section -->
+            <div class="settings-section" id="appearance-section" style="display: none;">
+              <h2>Change Theme</h2>
+              <p>Choose a theme for your account.</p>
+              <button>Change Theme</button>
             </div>
 
-            <div class="settings-section">
-              <h2>Export Account Data</h2>
-              <p>Export your account data for backup or review purposes.</p>
-              <button>Start Export</button>
+            <!-- Notifications Settings Section -->
+            <div class="settings-section" id="notifications-section" style="display: none;">
+              <h2>Phone Alerts</h2>
+              <p>Add a phone number to get urgent ASP stock info and urgent QTI ideas</p>
+              <p>Current Phone Number: {{ phone_number }}</p>
+              <button>Change Preferences</button>
+            </div>
+
+            <!-- Security Settings Section -->
+            <div class="settings-section" id="security-section" style="display: none;">
+              <h2>Security Settings</h2>
+              <p>Manage your account's security settings.</p>
+              <button>Change Security Settings</button>
             </div>
           </div>
         </div>
@@ -192,6 +202,22 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis"></script>
   <script src="{{ url_for('static', filename='js/smooth-scroll.js') }}"></script>
+
+  <script>
+    $(document).ready(function () {
+      $('#settings-sidebar a').click(function (event) {
+        event.preventDefault();  // Prevent the default link behavior
+
+        // Hide all sections
+        $('.settings-section').hide();
+
+        // Show the clicked section
+        var sectionToShow = $(this).data('section');
+        $('#' + sectionToShow).show();
+      });
+    });
+
+  </script>
 
 </body>
 

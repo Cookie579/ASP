@@ -74,13 +74,20 @@
 			$sidebar_inner = $sidebar.children('.inner');
 
 		// Inactive by default on <= large.
-			breakpoints.on('<=large', function() {
+			breakpoints.on('<=xlarge', function() {
 				$sidebar.addClass('inactive');
 			});
 
-			breakpoints.on('>large', function() {
+			// Check localStorage on page load to apply sidebar state.
+			if (localStorage.getItem('sidebarState') === 'active') {
 				$sidebar.removeClass('inactive');
-			});
+			} else {
+				$sidebar.addClass('inactive');
+			}
+
+			// breakpoints.on('>xlarge', function() {
+			// 	$sidebar.removeClass('inactive');
+			// });
 
 		// Hack: Workaround for Chrome/Android scrollbar position bug.
 			if (browser.os == 'android'
@@ -89,18 +96,24 @@
 					.appendTo($head);
 
 		// Toggle.
-			$('<a href="#sidebar" class="toggle">Toggle</a>')
-				.appendTo($sidebar)
-				.on('click', function(event) {
+		$('<a href="#sidebar" class="toggle">Toggle</a>')
+    .appendTo($sidebar)
+    .on('click', function(event) {
 
-					// Prevent default.
-						event.preventDefault();
-						event.stopPropagation();
+        // Prevent default.
+        event.preventDefault();
+        event.stopPropagation();
 
-					// Toggle.
-						$sidebar.toggleClass('inactive');
+        // Toggle sidebar state.
+        $sidebar.toggleClass('inactive');
 
-				});
+        // Save the current state of the sidebar in localStorage.
+        if ($sidebar.hasClass('inactive')) {
+            localStorage.setItem('sidebarState', 'inactive');
+        } else {
+            localStorage.setItem('sidebarState', 'active');
+        }
+    });
 
 		// Events.
 

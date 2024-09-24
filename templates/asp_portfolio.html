@@ -24,7 +24,6 @@
 		/* Cell border styling */
 		.ag-cell {
 			border: 1px solid rgb(255, 255, 255);
-			/* Black border around the cell */
 		}
 	}
 
@@ -38,9 +37,26 @@
 	}
 
 	h1 {
-    margin: 10px !important;
-  }
+		margin: 10px !important;
+	}
 
+	.legend-container {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 15px;
+	}
+
+	.legend-item {
+		display: flex;
+		align-items: center;
+		margin: 5px 0;
+	}
+
+	.legend-color {
+		width: 20px;
+		height: 20px;
+		margin-right: 10px;
+	}
 </style>
 
 <!-- Content -->
@@ -49,11 +65,32 @@
 		<h1>The ASP Portfolio</h1>
 	</header>
 
+	<div class="legend-container">
+		<div class="legend-item">
+			<span class="legend-color" style="background-color: #00ff00;"></span> Green - Indicates positive performance or
+			unrealized gains in the table.
+		</div>
+		<div class="legend-item">
+			<span class="legend-color" style="background-color: #ff0000;"></span> Red - Indicates negative performance or
+			unrealized losses in the table.
+		</div>
+		<div class="legend-item">
+			<span class="legend-color" style="background-color: #ffcc00;"></span> Yellow - Indicates that a stock target or
+			stop loss has been raised from its initial value.
+		</div>
+		<div class="legend-item">
+			<span class="legend-color" style="background-color: #0501fc;"></span> Dark Blue - Indicates that the stock target
+			has been reached.
+		</div>
+		<div class="legend-item">
+			<span class="legend-color" style="background-color: #ff8c00;"></span> Orange - Indicates that the stock is near the stop loss.
+	</div>
+	</div>
+
 	<!-- FlexGrid container -->
 	<div id="aspGrid" class="ag-theme-alpine-dark" style="height: 200px; width: 100%;"></div>
 
 	<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
-
 
 	<script>
 		let gridApiASP;
@@ -75,7 +112,6 @@
 				return item;
 			});
 		}
-
 
 		function processRowDataQTI(data) {
 			return data.map(item => {
@@ -102,8 +138,32 @@
 			// Check if "Stop Loss" should be highlighted based on "Raised Stop Loss"
 			if (field === 'Stop Loss' && parseFloat(params.data['Raised Stop Loss']) > 0) {
 				return {
-					backgroundColor: '#ffcc00' // Dark yellow color
+					backgroundColor: '#ffcc00' // Dark Yellow color
 				};
+			}
+
+			// Check if "Target 1" should be highlighted based on "Hit-T1"
+			if (field === 'Target 1' && params.data['Hit-T1?'] === true) {
+				return {
+					backgroundColor: '#0501fc'
+				};
+			}
+
+			// Check if "Target 2" should be highlighted based on "Hit-T2"
+			if (field === 'Target 2' && params.data['Hit-T2?'] === true) {
+				return {
+					backgroundColor: '#0501fc'
+				};
+			}
+
+			// Check the "% to Stop Loss" value for conditional styling
+			if (field === '% To Stop Loss') {
+				const percentToStopLoss = parseFloat(params.value);
+				if (percentToStopLoss < 0 && percentToStopLoss >= -5) {
+					return {
+						backgroundColor: '#ff8c00' // Dark Orange color
+					};
+				} 
 			}
 
 			if (['Company Name', 'Ticker', 'Current Price', 'Unrealized Gain/Loss'].includes(field)) {
@@ -183,7 +243,7 @@
 				gridColumnApiASP = params.columnApi;
 				gridApiASP.showLoadingOverlay();
 				fetchDataASP();
-				setInterval(fetchDataASP, 60000); // Update every 1 minute
+				setInterval(fetchDataASP, 600000); // Update every 10 minutes
 			}
 		};
 
@@ -198,7 +258,7 @@
 				gridColumnApiQTI = params.columnApi;
 				gridApiQTI.showLoadingOverlay();
 				fetchDataQTI();
-				setInterval(fetchDataQTI, 60000); // Update every 1 minute
+				setInterval(fetchDataQTI, 600000); // Update every 10 minutes
 			}
 		};
 
@@ -256,9 +316,6 @@
 	</header>
 
 	<div id="qtiGrid" class="ag-theme-alpine-dark" style="height: 200px; width: 100%;"></div>
-
-
-
 
 </section>
 

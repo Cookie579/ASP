@@ -191,6 +191,11 @@
 		border-top: 1px solid #555;
 		margin: 10px 0;
 	}
+
+	#dropdown-options-container{
+		max-height: 600px !important;
+	}
+
 </style>
 
 <main>
@@ -319,14 +324,13 @@
 
 	function saveRecentSearch(symbol) {
 		let recentSearches = getRecentSearches();
-		// Remove the symbol if it already exists
 		recentSearches = recentSearches.filter(search => search !== symbol);
-		// Add the symbol to the beginning of the array
 		recentSearches.unshift(symbol);
-		// Keep only the most recent searches
+
 		if (recentSearches.length > MAX_RECENT_SEARCHES) {
 			recentSearches.pop();
 		}
+		
 		localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
 	}
 

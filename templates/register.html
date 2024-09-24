@@ -165,6 +165,7 @@
             padding: 35px;
             border-radius: 5px;
             font-size: 14px;
+            padding-bottom: 0px;
         }
 
         .flash.success {
@@ -256,15 +257,22 @@
                     <!-- Right Side -->
                     <div class="right">
                         <div class="registration-form">
-                            <form action="{{ url_for('register') }}" method="post">
-
+                            <form action="/register" method="post">
                                 <div class="form-group">
                                     <label for="first_name">First Name</label>
-                                    <input type="text" id="first_name" name="first_name" required>
+                                    <input type="text" id="first_name" name="first_name" maxlength="24" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="last_name">Last Name</label>
-                                    <input type="text" id="last_name" name="last_name" required>
+                                    <input type="text" id="last_name" name="last_name" maxlength="24">
+                                </div>
+                                <div class="form-group">
+                                    <label for="date_of_birth">Date of Birth</label>
+                                    <input type="date" id="date_of_birth" name="date_of_birth">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
@@ -272,11 +280,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Password</label>
-                                    <input type="password" id="password" name="password" required>
+                                    <input type="password" id="password" name="password" maxlength="160" required>
                                 </div>
                                 <button type="submit">Register</button>
                                 <div class="form-link">
-                                    <a href="/login">Already have an account?</a>
+                                    <a href="/login">I am already a member</a>
                                 </div>
                             </form>
                         </div>

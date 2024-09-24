@@ -1,27 +1,20 @@
-// const lenis = new Lenis({
-//   duration: 1.2,
-//   easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
-//   direction: "vertical",
-//   gestureDirection: "vertical",
-//   smooth: true,
-//   smoothTouch: false,
-//   touchMultiplier: 2,
-// });
-// function raf(time) {
-//   lenis.raf(time);
-//   requestAnimationFrame(raf);
-// }
-// requestAnimationFrame(raf);
+window.addEventListener('DOMContentLoaded', function () {
+  const path = window.location.pathname;
 
-const lenis = new Lenis()
+  // Only run Lenis if the route is NOT '/stock-viewer'
+  if (path !== '/stock-viewer') {
+    const lenis = new Lenis({
+      smooth: true,
+      lerp: 0.1,
+      direction: 'vertical',
+      smoothWheel: true,
+    });
 
-lenis.on('scroll', (e) => {
-  console.log(e)
-})
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
 
-function raf(time) {
-  lenis.raf(time)
-  requestAnimationFrame(raf)
-}
-
-requestAnimationFrame(raf)
+    requestAnimationFrame(raf);
+  }
+});

@@ -71,9 +71,6 @@
         cursor: pointer;
     }
 
-    ul.icons {
-    }
-
     .fa {
         color: blue !important;
     }
@@ -120,7 +117,7 @@
 
             <div class="dropdown-content">
                 {% if current_user.is_authenticated %}
-                <a href="/settings"><strong>Settings</strong></a>
+                <!-- <a href="/settings"><strong>Settings</strong></a> -->
                 <a href="/logout"><strong>Logout</strong></a>
 
                 {% else %}

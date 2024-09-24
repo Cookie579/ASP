@@ -183,6 +183,9 @@ def login():
             flash('Invalid email or password', 'error')
             return redirect(url_for('login'))
 
+        # Store the phone number in the session
+        session['phone_number'] = user.get('phone_number')
+
         login_user(User(user))
         return redirect(url_for('home'))
     return render_template('login.html')
@@ -373,7 +376,12 @@ def QTI():
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html')
+    
+    # Retrieve the phone number from the session
+    phone_number = session.get('phone_number', 'Phone number not available')
+    phone_number = format_phone_number(phone_number)
+    
+    return render_template('settings.html', phone_number=phone_number)
 
 @app.route('/portfolio-updates')
 def portfolio_updates():
@@ -401,13 +409,19 @@ def get_asp_data():
     
     # Update 'Stop Loss' where 'Raised Stop Loss' > 0
     df.loc[df["Raised Stop Loss"] > 0, "Stop Loss"] = df["Raised Stop Loss"]
-            
+    
+    # Track indexes where 'Raised Stop Loss' values are changed
+    df['Hit-T1?'] = df["Hit-T1"] > 0
+    df['Hit-T2?'] = df["Hit-T2"] > 0
+    
     # Update current prices and perform calculations
     df['Current Price'] = df['Ticker'].apply(fetch_current_price)
     df['Unrealized Gain/Loss'] = (df['Current Price'] - df['Price Bought']) / df['Price Bought'] * 100
     df['% To T1'] = (df['Target 1'] - df['Current Price']) / df['Current Price'] * 100
     df['% To T2'] = (df['Target 2'] - df['Current Price']) / df['Current Price'] * 100
     df['% To Stop Loss'] = (df['Stop Loss'] - df['Current Price']) / df['Current Price'] * 100
+    
+
     
     # Round all numeric values to 2 decimal places
     df = df.round(2)
@@ -468,6 +482,13 @@ def run_python():
     ticker = request.args.get('ticker')
     result = subprocess.run(['python', 'downloader.py', ticker], capture_output=True, text=True)
     return result.stdout
+
+
+# Utils
+def format_phone_number(phone):
+    if len(phone) == 10 and phone.isdigit():  # Ensure it has 10 digits
+        return f"{phone[:3]} - {phone[3:6]} - {phone[6:]}"
+    return phone  # Return as is if it doesn't meet the criteria
 
 # Run
 if __name__ == '__main__':
