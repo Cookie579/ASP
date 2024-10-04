@@ -346,6 +346,10 @@ def calculate_stock_balance(user_id, ticker):
     return balance
 
 # Basic Pages ---------------------------------------------------------------------------------------------------------------
+@app.route('/housing')
+def housing():
+    return render_template('pubs/housing.html')
+
 @app.route('/stock-viewer')
 def generic():
     return render_template('stock_viewer.html')
@@ -369,6 +373,11 @@ def b_and_b():
 @app.route('/danaher-dhr')
 def danaher():
     return render_template('danaher_DHR.html')
+
+# To be added!
+@app.route('/brookefield-bam')
+def brookefield():
+    return render_template('brookefield-BAM.html')
 
 @app.route('/QTI')
 def QTI():
