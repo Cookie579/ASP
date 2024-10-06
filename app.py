@@ -377,7 +377,15 @@ def danaher():
 # To be added!
 @app.route('/brookefield-bam')
 def brookefield():
-    return render_template('brookefield-BAM.html')
+    return render_template('brookefield_BAM.html')
+
+@app.route('/nasdaq-ndaq')
+def nasdaq():
+    return render_template('ndaq.html')
+
+@app.route('/cibc-cm')
+def cibc():
+    return render_template('cibc_CM.html')
 
 @app.route('/QTI')
 def QTI():
@@ -429,9 +437,7 @@ def get_asp_data():
     df['% To T1'] = (df['Target 1'] - df['Current Price']) / df['Current Price'] * 100
     df['% To T2'] = (df['Target 2'] - df['Current Price']) / df['Current Price'] * 100
     df['% To Stop Loss'] = (df['Stop Loss'] - df['Current Price']) / df['Current Price'] * 100
-    
-
-    
+        
     # Round all numeric values to 2 decimal places
     df = df.round(2)
 
@@ -462,7 +468,8 @@ def get_QTI_data():
         if row['Type'] == 'Buy':
             return (row['Current Price'] - row['Price Bought']) / row['Price Bought'] * 100
         elif row['Type'] == 'Short':
-            return (row['Price Bought'] - row['Current Price']) / row['Current Price'] * 100
+            print("Shorting ", df['Ticker'])
+            return (row['Price Bought'] - row['Current Price']) / row['Price Bought'] * 100
         return 0
 
     # Apply the calculation function to each row
