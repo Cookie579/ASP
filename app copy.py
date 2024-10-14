@@ -14,6 +14,7 @@ import random, string
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
+
 # Init ---------------------------------------------------------------------------------------------------------------------------
 load_dotenv()  # Load environment variables from .env file
 

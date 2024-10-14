@@ -1,5 +1,36 @@
 [
   {
+    "date": "Oct 11, 2024",
+    "changes": [
+      "Placed a short sale on Boeing (BA) at $151.02",
+      "Sold all Microstrategy Inc. (MSTR) shares at $209.98 (19.32% Profit)"
+    ]
+  },
+  {
+    "date": "Oct 06, 2024",
+    "changes": [
+      "Placed a buy order on Microstrategy Inc (MSTR) at $175.98"
+    ]
+  },
+  {
+    "date": "Sep 23, 2024",
+    "changes": [
+      "Placed a short sale on Lase Photonics Corp. (LASE) at $18.41"
+    ]
+  },
+  {
+    "date": "Sep 21, 2024",
+    "changes": [
+      "CIBC (CM) shares bought at $52.63"
+    ]
+  },
+  {
+    "date": "Sep 17, 2024",
+    "changes": [
+      "Placed a short sale on Neonade Inc. (NEON) at $11.16"
+    ]
+  },
+  {
     "date": "Sep 10, 2024",
     "changes": [
       "All of Consolidated Edision (ED) shares sold for 105.19$ (5.08% Profit)"
@@ -20,7 +51,9 @@
   {
     "date": "Aug 29, 2024",
     "changes": [
-      "Placed a short sale on Taseko Mines (TGB) at $2.200"
+      "Placed a short sale on Taseko Mines (TGB) at $2.200",
+      "75% of CIBC (CM) shares sold after hitting Target 1 (8.63% Profit)",
+      "Raised Stop Loss of CIBC (CM) to $55.93"
     ]
   },
   {
@@ -34,6 +67,20 @@
     "date": "Aug 19, 2024",
     "changes": [
       "Consolidated Edision Inc. (ED) shares bought at $100.10"
+    ]
+  },
+  {
+    "date": "Aug 13, 2024",
+    "changes": [
+      "75% of Brookefield Asset Mgm. (BAM) shares sold after hitting Target 1 (14.43% Profit)",
+      "Raised Stop Loss of Brookefield Asset Mgm. (BAM) to $43.11"
+    ]
+  },
+  {
+    "date": "Aug 9, 2024",
+    "changes": [
+      "Nasdaq Inq (NDAQ) shares bought at $67.87",
+      "Brookefield Asset Mng. (BAM) shares bought at $39.51"
     ]
   },
   {
