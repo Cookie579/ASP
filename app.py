@@ -43,8 +43,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 # Mailing
-# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_SERVER'] = 'smtpout.secureserver.net'
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
@@ -86,6 +85,8 @@ class User(UserMixin):
         self.portfolio_locked = user_data.get('portfolio_locked', False)
         self.confirmation_number = user_data.get('confirmation_number')
         self.email_confirmed = user_data.get('email_confirmed', False)
+        self.portfolio_initial = user_data.get('portfolio_initial', 0.0)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -128,13 +129,12 @@ def register():
 
         confirmation_number = generate_confirmation_number()
         
-
         msg = EmailMessage(
             "Confirm Your Email for Axiom Stock Picks",
             f"""
             Hi there,
 
-            Welcome to **Axiom Stock Picks**! 
+            Welcome to Axiom Stock Picks! 
             Your confirmation code: {confirmation_number}
             """,
             app.config['MAIL_USERNAME'],
@@ -153,11 +153,14 @@ def register():
             "phone_number": phone_number,
             "portfolio_value": 0.0,
             "portfolio_locked": False,
+            
+            # Adding Portfolio Initial
+            "portfolio_initial": 0.0,
             "confirmation_number": confirmation_number,
             "email_confirmed": False
         }
-        users_collection.insert_one(new_user)
         
+        users_collection.insert_one(new_user)
         confirmation = True
 
     return render_template('register.html', confirmation=confirmation)
@@ -212,7 +215,9 @@ def home():
     trades = list(trades_collection.find({"user_id": current_user.id}))
     holdings = calculate_current_holdings(current_user.id)
     portfolio_value = current_user.portfolio_value
-    return render_template('paper_trade.html', trades=trades, portfolio_value=portfolio_value, holdings=holdings)
+    portfolio_initial = current_user.portfolio_initial
+    
+    return render_template('paper_trade.html', trades=trades, portfolio_value=portfolio_value, portfolio_initial=portfolio_initial, holdings=holdings)
 
 
 # Calculate Holdings ---------------------------------------------------------------------------------------------------------------------------------
@@ -321,6 +326,17 @@ def update_portfolio():
         flash('Invalid portfolio value. Please enter a valid number.', 'error')
         return redirect(url_for('home'))
 
+    # Get the current user document
+    user = users_collection.find_one({"_id": ObjectId(current_user.id)})
+
+    # Check if 'portfolio_initial' is set or is still at the default value of 0.0
+    if not user.get('portfolio_initial') or user['portfolio_initial'] == 0.0:
+        # Set the 'portfolio_initial' to the first portfolio value
+        users_collection.update_one(
+            {"_id": ObjectId(current_user.id)},
+            {"$set": {"portfolio_initial": portfolio_value}}
+        )
+
     # Update the user's portfolio value and lock the portfolio
     users_collection.update_one(
         {"_id": ObjectId(current_user.id)},
@@ -334,7 +350,16 @@ def update_portfolio():
 @app.route('/reset_portfolio', methods=['POST'])
 @login_required
 def reset_portfolio():
-    users_collection.update_one({"_id": ObjectId(current_user.id)}, {"$set": {"portfolio_value": 0.0, "portfolio_locked": False}})
+    users_collection.update_one(
+        {"_id": ObjectId(current_user.id)},
+        {
+            "$set": {
+                "portfolio_value": 0.0,
+                "portfolio_locked": False,
+                "portfolio_initial": 0.0  # Reset the initial portfolio value as well
+            }
+        }
+    )
     trades_collection.delete_many({"user_id": current_user.id})
     flash('Portfolio reset and trade history cleared.', 'success')
     return redirect(url_for('home'))

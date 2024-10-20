@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
-    <link rel="shortcut icon" href="#" />
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/default/asp_icon.ico') }}">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -25,12 +25,10 @@
         .ag-theme-alpine,
         .ag-theme-alpine-dark {
 
-            /* Cell border styling */
             .ag-cell {
                 border: 1px solid #ffffffb7;
             }
         }
-
 
         body {
             background-color: #000000;
@@ -88,9 +86,18 @@
             box-sizing: border-box;
         }
 
+        #ticker {
+            background-color: black !important;
+        }
+
+        #portfolio_value {
+            color: white !important;
+        }
+
         #lower-wrapper {
             display: flex;
             flex-grow: 1;
+            margin-bottom: 20px;
         }
 
         #orders-section,
@@ -136,6 +143,10 @@
             background-color: #1b1f3a;
         }
 
+        p {
+            margin-bottom: 0px !important;
+        }
+
         .header {
             font-size: 18px;
             margin-bottom: 10px;
@@ -171,7 +182,9 @@
 
         .flash-container {
             padding: 35px;
-            margin-bottom: 20px;
+            padding-bottom: 0px !important;
+            padding-top: 0px !important;
+            margin-bottom: 0px;
             border-radius: 5px;
             font-size: 14px;
         }
@@ -230,26 +243,17 @@
             max-width: 75vw;
         }
 
-        /* @media (max-width: 1680px){
-            #container {
-            width: 100%;
-            height: 834px !important;
-            margin: auto;
-            }
-        } */
-
         @media (max-width: 1340px) {
             #main-papertrade {
                 flex-direction: column;
                 margin-bottom: -10px;
-
             }
 
             #chart-wrapper {
-                width: 100%;
+                width: 100% !important;
                 max-width: 100%;
                 padding-right: 0;
-                margin-bottom: 10px;
+                margin-bottom: 0px;
             }
 
             #container {
@@ -266,14 +270,14 @@
                 flex-direction: row;
                 width: 100%;
                 height: auto;
-                margin-top: 10px;
+                margin-top: 0px;
             }
 
             #orders-section,
             #paper-account-detail {
                 width: 50%;
                 margin-top: 10px;
-                margin-right: 0;
+                margin-right: 0px !important;
             }
 
             #orders-section {
@@ -737,8 +741,6 @@
                     </form>
                 </div>
 
-
-
                 <div id="quotes-section" class="box">
                     <div class="tradingview-widget-container">
                         <div class="tradingview-widget-container__widget"></div>
@@ -775,12 +777,13 @@
                         // Initialize AG Grid
                         const gridOptions = {
                             columnDefs: [
-                                { headerName: 'Ticker', field: 'ticker', flex: 1 },
-                                { headerName: 'Quantity', field: 'quantity', flex: 1 },
+                                { headerName: 'Ticker', field: 'ticker', flex: 1, minWidth: 85 },
+                                { headerName: 'Quantity', field: 'quantity', flex: 1, minWidth: 100 },
                                 {
                                     headerName: 'Average Price $',
                                     field: 'average_price',
                                     flex: 1,
+                                    minWidth: 140,
                                     valueFormatter: function (params) {
                                         // Format average price to 2 decimal places
                                         return parseFloat(params.value).toFixed(2);
@@ -788,6 +791,8 @@
                                 },
                                 {
                                     headerName: 'Total  $',
+                                    flex: 1,
+                                    minWidth: 105,
                                     valueGetter: function (params) {
                                         // Calculate total value
                                         const quantity = params.data.quantity || 0;
@@ -801,10 +806,50 @@
                                 {
                                     headerName: 'Last Price $',
                                     field: 'last_price',
+                                    flex: 1,
+                                    minWidth: 115,
                                     valueFormatter: function (params) {
                                         return parseFloat(params.value).toFixed(2);
                                     }
+                                },
+                                {
+                                    headerName: 'Profit $',
+                                    field: 'profit',
+                                    flex: 1,
+                                    minWidth: 115,
+                                    valueGetter: function (params) {
+                                        // Calculate gain or loss
+                                        const quantity = params.data.quantity || 0;
+                                        const lastPrice = params.data.last_price || 0;
+                                        const averagePrice = params.data.average_price || 0;
+                                        return (lastPrice - averagePrice) * quantity;
+                                    },
+
+                                    valueFormatter: function (params) {
+                                        return parseFloat(params.value).toFixed(2);
+                                    }
+                                },
+                                {
+                                    headerName: 'Gain/Loss %',
+                                    field: 'unrealizedGainLossPercent',
+                                    flex: 1,
+                                    minWidth: 115,
+                                    valueGetter: function (params) {
+                                        const averagePrice = params.data.average_price || 0;
+                                        const lastPrice = params.data.last_price || 0;
+
+                                        // Avoid division by zero
+                                        if (averagePrice === 0) {
+                                            return 0;
+                                        }
+
+                                        return ((lastPrice - averagePrice) / averagePrice) * 100;
+                                    },
+                                    valueFormatter: function (params) {
+                                        return parseFloat(params.value).toFixed(2) + '%';
+                                    }
                                 }
+
                             ],
                             rowData: rowData,
                             domLayout: 'normal'
@@ -836,7 +881,8 @@
                 </form>
 
 
-                <p>Current Portfolio Value: ${{ "{:.2f}".format(portfolio_value) }}</p>
+                <p class="text">Starting Portfolio Size: ${{ "{:.2f}".format(portfolio_initial) }}</p>
+                <p class="text">Cash Value: ${{ "{:.2f}".format(portfolio_value) }}</p>
             </div>
         </div>
 
@@ -874,9 +920,6 @@
 
 
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis"></script>
-    <script src="{{ url_for('static', filename='js/smooth-scroll.js') }}"></script>
 
 </body>
 
