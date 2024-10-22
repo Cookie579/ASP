@@ -2,3 +2,4 @@ venv/
 .vscode
 .env
 tasks.txt
+trades.txt

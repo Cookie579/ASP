@@ -7,10 +7,8 @@ Add Colourful highlights to login / register CSS
 Write more articles! Beef up the website with content
 
 <!-- Paper Trade -->
-Add more functionality to the paper trading
-Include portfolio history and fix css styling
+Include portfolio history
 
 <!-- Hard / Annoying -->
 Streamline and compartmentalize app.py 
 Move Everything to main.css
-Add LIGHT MODE!
