@@ -292,7 +292,33 @@
                 </div>
             </div>
         </div>
+
+        {% include 'components/confirmation_overlay.html'%}
+
     </div>
+
+    <script>
+        // Show overlay after registration success
+        window.onload = function () {
+            const flashContainer = document.querySelector('.flash-container');
+            if (flashContainer) {
+                const confirmationOverlay = document.getElementById('confirmation-overlay');
+                confirmationOverlay.style.display = 'flex'; // Show overlay
+
+                // Handle confirmation button click
+                document.getElementById('confirm-button').onclick = function (event) {
+                    event.preventDefault();
+                    const confirmationForm = document.getElementById('confirmation-form');
+                    confirmationForm.submit();
+                };
+
+                // Close overlay
+                document.getElementById('overlay-close').onclick = function () {
+                    confirmationOverlay.style.display = 'none';
+                };
+            }
+        };
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis"></script>
     <script src="{{ url_for('static', filename='js/smooth-scroll.js') }}"></script>

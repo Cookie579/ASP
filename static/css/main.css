@@ -1733,3 +1733,63 @@ button.primary:hover,
 ::-webkit-scrollbar-thumb:hover {
   background: #777;
 }
+
+
+/* Overlay Styles */
+#confirmation-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid black;
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  width: 400px;
+}
+
+#confirmation-overlay label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+#confirmation-overlay input {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 14px;
+  width: 100%;
+  color: #000000 !important;
+}
+
+#confirmation-overlay button {
+  width: 100%;
+  background: #000000;
+  border: none;
+  border-radius: 25px;
+  outline: none;
+  box-shadow: none;
+  color: white !important;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-bottom: 0px !important;
+  margin-top: 15px;
+
+}
+
+#confirmation-overlay button:hover {
+  color: #0501fc !important;
+}
+
+#overlay-close {
+  margin-top: 10px;
+  cursor: pointer;
+  color: #ff0000;
+}
