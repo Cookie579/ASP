@@ -497,7 +497,6 @@ def get_QTI_data():
         if row['Type'] == 'Buy':
             return (row['Current Price'] - row['Price Bought']) / row['Price Bought'] * 100
         elif row['Type'] == 'Short':
-            print("Shorting ", df['Ticker'])
             return (row['Price Bought'] - row['Current Price']) / row['Price Bought'] * 100
         return 0
 
@@ -531,9 +530,9 @@ def run_python():
 
 # Utils
 def format_phone_number(phone):
-    if len(phone) == 10 and phone.isdigit():  # Ensure it has 10 digits
+    if len(phone) == 10 and phone.isdigit():  
         return f"{phone[:3]} - {phone[3:6]} - {phone[6:]}"
-    return phone  # Return as is if it doesn't meet the criteria
+    return phone 
 
 # Run
 if __name__ == '__main__':

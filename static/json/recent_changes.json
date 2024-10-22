@@ -1,11 +1,24 @@
-[
+[ 
+  {
+    "date": "Oct 22, 2024",
+    "changes": [
+      "GE Aerospace Stops out at 189.00 (2.42 % Loss)"
+    ]
+  },
   {
     "date": "Oct 21, 2024",
     "changes": [
       "Target 2 Raised on CIBC (CM) to 67.07$",
+      "Placed a short sale on GE Aerospace (GE) at $193.68",
       "BRO Stop Loss Raised to 97.11$",
       "BAM Stop Loss Raised to 45.55$",
       "NDAQ Stop Loss Raised to 66.79$"
+    ]
+  },
+  {
+    "date": "Oct 18, 2024",
+    "changes": [
+      "Placed a short sale on Pfizer Inc. (PFE) at $29.17"
     ]
   },
   {
@@ -19,6 +32,12 @@
     "changes": [
       "Placed a short sale on Boeing (BA) at $151.02",
       "Sold all Microstrategy Inc. (MSTR) shares at $209.98 (19.32% Profit)"
+    ]
+  },
+  {
+    "date": "Oct 10, 2024",
+    "changes": [
+      "Placed a short sale on AMD (AMD) at $165.35"
     ]
   },
   {
