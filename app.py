@@ -403,7 +403,6 @@ def b_and_b():
 def danaher():
     return render_template('danaher_DHR.html')
 
-# To be added!
 @app.route('/brookefield-bam')
 def brookefield():
     return render_template('brookefield_BAM.html')
@@ -415,6 +414,10 @@ def nasdaq():
 @app.route('/cibc-cm')
 def cibc():
     return render_template('cibc_CM.html')
+
+@app.route('/tesla-tsla')
+def tesla():
+    return render_template('tesla_TSLA.html')
 
 @app.route('/QTI')
 def QTI():
