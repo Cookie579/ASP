@@ -1,10 +1,45 @@
 [ 
   {
+    "date": "Nov 18, 2024",
+    "changes": [
+      "Cameco Shares bought at $55.39"
+    ]
+  },
+  {
+    "date": "Nov 11, 2024",
+    "changes": [
+      "75% of Tesla Shares sold at 330.21$ (52.42% Profit)",
+      "Tesla T2 Raised to $370.99",
+      "Tesla stop loss raised to 261.12"
+    ]
+  },
+  {
+    "date": "Nov 7, 2024",
+    "changes": [
+      "Tesla stop loss raised to 254.12",
+      "Tesla T2 Raised to $330.21"
+    ]
+  },
+  {
+    "date": "Nov 04, 2024",
+    "changes": [
+      "JP Morgan Shares bought at $219.78",
+      "BAM T2 Raised to $62.55",
+      "BAM stop loss raised to $48.34"
+    ]
+  },
+  {
+    "date": "Oct 31, 2024",
+    "changes": [
+      "Placed a short sale on Mira Pharma. (MIRA) at $2.19"
+    ]
+  },
+  {
     "date": "Oct 24, 2024",
     "changes": [
       "Tesla stop loss raised to 216.29",
       "75% of Tesla Shares sold at 239.10$ (10.4% Profit)",
-      "Tesla T2 Raised to 280.12 & Rebought 50% of shares sold"
+      "Tesla T2 Raised to 280.12 & Rebought 90% of shares sold"
     ]
   },
   {
