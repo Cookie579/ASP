@@ -6,7 +6,7 @@
 	document.title = "ASP - Portfolios";
 </script>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css"> -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
 
 <style>
@@ -304,10 +304,10 @@
 
 		document.addEventListener('DOMContentLoaded', function () {
 			const gridDivASP = document.querySelector('#aspGrid');
-			new agGrid.Grid(gridDivASP, gridOptionsASP);
+			new agGrid.createGrid(gridDivASP, gridOptionsASP);
 
 			const gridDivQTI = document.querySelector('#qtiGrid');
-			new agGrid.Grid(gridDivQTI, gridOptionsQTI);
+			new agGrid.createGrid(gridDivQTI, gridOptionsQTI);
 		});
 	</script>
 
